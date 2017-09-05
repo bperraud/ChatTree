@@ -1,0 +1,40 @@
+@import '../../../var';
+
+#home-container {
+  padding: 20px;
+  text-align: center;
+
+  #create-conv {
+    color: gray;
+    font-size: 2.8em;
+    text-decoration: none;
+    display: block;
+    position: relative;
+
+    #bored-cat {
+      width: 100%;
+      max-width: 640px;
+      border: 10px solid @main-color-light;
+    }
+
+    // TODO: add media-queries for better position
+    #create-conv-label {
+      position: absolute;
+      top: 10%;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 70%;
+      max-width: calc(~'640px - 10%');
+      padding: 10px;
+      border-radius: 15px;
+      background-color: rgba(255, 255, 255, .4);
+      transition: 200ms;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, .85);
+        color: @main-color;
+      }
+    }
+  }
+}
