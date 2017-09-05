@@ -1,0 +1,105 @@
+@import './var';
+
+/* Master Styles */
+h1 {
+  color: #369;
+  font-family: Aller, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 250%;
+}
+
+h2, h3 {
+  color: #444;
+  font-family: Aller, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: lighter;
+}
+
+body {
+  margin: 2em;
+}
+
+body, input[text], button {
+  color: #888;
+  font-family: Cambria, Georgia, serif;
+}
+
+a {
+  cursor: hand;
+}
+
+button, input, optgroup, select, textarea {
+  font-family: Aller, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+button {
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none !important;
+
+  &:hover {
+    background-color: #cfd8dc;
+  }
+
+  &:focus {
+    outline: none !important;
+  }
+
+  &:disabled {
+    background-color: #eee;
+    color: #aaa;
+    cursor: auto;
+  }
+}
+
+/* Navigation link styles */
+nav a {
+  padding: 5px 10px;
+  text-decoration: none;
+  margin-right: 10px;
+  margin-top: 10px;
+  display: inline-block;
+  background-color: #eee;
+  border-radius: 4px;
+
+  &:visited, &:link {
+    color: #607D8B;
+  }
+
+  &:hover {
+    color: #039be5;
+    background-color: #CFD8DC;
+  }
+
+  &.active {
+    color: #039be5;
+  }
+}
+
+/* everywhere else */
+* {
+  font-family: Aller, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Toasts */
+
+#toast-container > div {
+  box-shadow: none!important;
+  border-radius: 0!important;
+  font-family: Aller, "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  &.toast-custom {
+    color: #d2d2d2 !important;
+    background-color: #272727;
+
+    .toast-close-button {
+      color: #d2d2d2;
+      text-shadow: none;
+    }
+  }
+
+  &.toast-success {
+    background-color: @main-color;
+  }
+}
