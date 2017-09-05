@@ -103,11 +103,6 @@ app.set('port', port);
 const server = http.createServer(app);
 
 /**
- * Create WebSocket server.
- */
-//const wss = require('./server/websocket/wss')(server);
-
-/**
  * Create socket io server.
  */
 const io = require('./server/websocket/io-server')(server);
