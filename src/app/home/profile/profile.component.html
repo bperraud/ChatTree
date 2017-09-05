@@ -1,0 +1,50 @@
+<div id="header">
+  <div class="user">
+    <!--<img -->
+      <!--check-image-user-->
+      <!--ng-src="{{'images/users/' + user.pp}}"-->
+      <!--alt="profile-picture" -->
+      <!--ng-click="showUserInformation = !showMembersList ? !showUserInformation : showUserInformation"-->
+    <!--&gt;-->
+    <img
+      src="/assets/images/users/default.jpg"
+    >
+  </div>
+  <div class="title">
+    <span ng-bind="headerTitle"></span>
+    <i class="fa fa-users"
+       ng-click="showMembersList = !showUserInformation ? !showMembersList : showMembersList"></i>
+  </div>
+</div>
+<div class="members-list header-popup" ng-show="showMembersList">
+  <div class="triangle"></div>
+  <div class="close" ng-click="showMembersList = false">
+    <i class="fa fa-times"></i>
+  </div>
+  <span class="number"><strong ng-bind="activeConv.members.length"></strong> participants</span>
+  <hr>
+  <ul class="action">
+    <li ng-repeat="c in activeConv.members">
+      <a href="#">
+        <!--<span ng-show="c.label">{{c.label}}<br/></span>-->
+        <!--<span class="italic">{{c.email}}</span>-->
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="user-information header-popup" ng-show="showUserInformation">
+  <div class="triangle"></div>
+  <div class="close" ng-click="showUserInformation = false">
+    <i class="fa fa-times"></i>
+  </div>
+  <ul class="fixed-data">
+    <!--<li class="name">{{user.surname}} {{user.name}}</li>-->
+    <!--<li class="login">@{{user.login}}</li>-->
+  </ul>
+  <hr>
+  <ul class="action">
+    <li><a href="#" ng-click="profileEditor(); showUserInformation = false"><i class="fa fa-pencil"></i>Modifier mon profil</a></li>
+    <li><a href="#"><i class="fa fa-cog"></i>Paramètres</a></li>
+    <li><a href="#" ng-click="logout()"><i class="fa fa-sign-out"></i>Déconnexion</a></li>
+  </ul>
+</div>
