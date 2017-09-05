@@ -1,0 +1,57 @@
+<div class="messages-container clearfix" #messageContainer>
+  <div class="chat">
+    <div class="chat-history">
+      <div *ngIf="thread | async as thread; else loading">
+        <span *ngIf="thread.messages.length === 0">Aucun message pour le moment, à vous de jouer !</span>
+        <ul>
+          <li
+            [@fadeInOut]="'*'"
+            class="clearfix"
+            [ngClass]="{'my-message-container': m.author === user.id, 'other-message-container': m.author !== user.id}"
+            *ngFor="let m of thread.messages"
+          >
+            <ng-template #messageMe [ngIf]="m.author === user.id">
+              <div class="message-data align-right">
+                <span class="message-data-time">{{m.date | date : 'HH:mm&nbsp;&nbsp;&nbsp;dd/MM/yyyy'}}</span>
+              </div>
+              <div class="message my-message tri-right">
+                <span class="newlines" [innerHtml]="m.content | nl2br"></span>
+                <div class="author-cap" (click)="showUserModal()">
+                  <span>{{(getAuthorMember(m.author) | userName).substr(0, 1) | uppercase}}</span>
+                </div>
+                <div class="message-details details-left">
+                  <i class="fa fa-ellipsis-h"></i>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #messageOther [ngIf]="m.author !== user.id">
+              <div class="message-data align-left">
+                <span class="message-data-name">{{getAuthorMember(m.author) | userName}}</span><!--
+             --><span class="message-data-time">{{m.date | date : 'HH:mm&nbsp;&nbsp;&nbsp;dd/MM/yyyy'}}</span>
+              </div>
+              <div class="message other-message tri-left">
+                <span class="newlines" [innerHtml]="m.content | nl2br"></span>
+                <div class="author-cap" (click)="showUserModal()">
+                  <span>{{(getAuthorMember(m.author) | userName).substr(0, 1) | uppercase}}</span>
+                </div>
+                <div class="message-details">
+                  <i class="fa fa-ellipsis-h"></i>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+      </div>
+      <ng-template #loading>
+        <div class="loading">
+          <span class="text">Chargement des messages en cours...</span>
+          <div class="refresh">
+            <i class="fa fa-refresh"></i>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<app-new-message [thread]="thread | async"></app-new-message>

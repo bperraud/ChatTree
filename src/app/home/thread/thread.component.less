@@ -1,0 +1,244 @@
+@import '../../../var';
+
+@my-message-color: @main-color; // @others-message-color: #AD88D7;
+@others-message-color: @contrast-color;
+
+.messages-container {
+  margin: 0 auto;
+  background-color: @main-background-color;
+  /* Firefox */
+  height: -moz-calc(~'100% - 50px');
+  /* WebKit */
+  height: -webkit-calc(~'100% - 50px');
+  /* Standard */
+  height: calc(~'100% - 50px');
+  overflow-y: auto;
+
+  .chat {
+    height: 100%;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: #434651;
+
+    .chat-history {
+      height: 100%;
+      padding: 10px 30px;
+
+      ul {
+        padding: 0;
+        list-style: none;
+
+        li {
+          position: relative;
+          max-width: 600px;
+          margin: auto;
+        }
+      }
+
+      .message-data {
+        margin: 0;
+        color: @font-color-light;
+        font-size: 0.7em;
+        font-style: italic;
+      }
+
+      .message-data-name {
+      }
+
+      .message-data-time {
+      }
+
+      .message {
+        color: @font-color;
+        padding: 10px 15px;
+        line-height: 26px;
+        margin-bottom: 20px;
+        width: 90%;
+        position: relative;
+        font-size: 1em;
+        text-align: justify;
+        border-radius: 0;
+      }
+
+      .my-message {
+        background: @my-message-color;
+        float: right;
+      }
+
+      .other-message {
+        background: @others-message-color;
+      }
+
+      .loading {
+        display: flex;
+        justify-content: center;
+
+        .text {
+          padding-right: 8px;
+        }
+
+        .refresh {
+
+          @keyframes rotate360 {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
+          display: flex;
+          flex-direction: column;
+          justify-items: center;
+          animation: 2s rotate360 infinite linear;
+
+          .fa {
+            margin: auto;
+          }
+        }
+
+      }
+    }
+  }
+}
+
+.me,
+.offline,
+.online {
+  margin-right: 3px;
+  font-size: 10px;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+/* message details (dots) */
+.message-details {
+  color: @font-color-light;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 25px;
+  transition: .5s;
+  opacity: 0;
+  transition-delay: 1s;
+}
+
+.tri-left {
+  & .message-details {
+    right: 0;
+  }
+  &:hover .message-details {
+    right: -65px;
+    opacity: 1;
+    transition-delay: 0s;
+  }
+}
+
+.tri-right {
+  & .message-details {
+    left: 0;
+  }
+  &:hover .message-details {
+    left: -65px;
+    opacity: 1;
+    transition-delay: 0s;
+  }
+}
+
+.author-cap {
+  display: flex;
+  color: @font-color;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 3px solid;
+  text-align: center;
+  cursor: pointer;
+  span {
+    margin: auto;
+  }
+}
+
+.my-message .author-cap {
+  border-color: @my-message-color;
+}
+
+.other-message .author-cap {
+  border-color: @others-message-color;
+}
+
+.tri-left .author-cap {
+  right: calc(~'-3rem - 10px');
+}
+
+.tri-right .author-cap {
+  left: calc(~'-3rem - 10px');
+}
+
+/* Triangle on left */
+.tri-left:after {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: -20px;
+  right: auto;
+  top: 20px;
+  bottom: auto;
+  border: 12px solid;
+  border-color: @others-message-color @others-message-color transparent transparent;
+  //transform: rotate(45deg);
+}
+
+/* Triangle on right */
+
+.tri-right:after {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  right: -20px;
+  left: auto;
+  top: 20px;
+  bottom: auto;
+  border: 12px solid;
+  border-color: @my-message-color transparent transparent @my-message-color;
+  //transform: rotate(45deg);
+}
+
+// -----------------------------------------------------------------------------
+//  SCROLLBARS
+// -----------------------------------------------------------------------------
+.messages-container::-webkit-scrollbar-track {
+  border-radius: 0;
+  background-color: #F5F5F5;
+  margin-right: 5px;
+}
+
+.messages-container::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5;
+  margin-right: 5px;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background-color: #CCC;
+  margin-right: 5px;
+}
