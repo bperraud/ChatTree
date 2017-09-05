@@ -11,9 +11,9 @@
     <div class="conversations-wrapper">
       <!--<div class="conversation fade-item" ng-repeat="c in conversationsArray | reverseArray | filterAmongConversations:searchAmongConversations" ng-class="convActiveClass('{{c._id}}')">-->
       <a
+        *ngFor="let conv of conversations"
         routerLink="/conversation/{{conv.id}}"
         routerLinkActive="active"
-        *ngFor="let conv of conversations"
         [@fadeInOut]="'*'"
         class="conversation"
       >

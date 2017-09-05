@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { ConversationService } from '../_services/conversation.service';
 
+import 'rxjs/add/operator/switchMap';
+
 import { Treant } from 'treant-js';
 
 @Component({

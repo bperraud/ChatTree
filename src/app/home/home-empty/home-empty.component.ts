@@ -31,6 +31,6 @@ export class HomeEmptyComponent implements OnInit {
 
   createNewConversation() {
     this.convService.triggerNewConversationModal();
-  };
+  }
 
 }

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../_services/auth-guard.service';
 //import { DefaultConversationResolver } from './default-conversation-resolver.service';
-import { LogoutResolver } from "app/login/logout-resolver.service";
+import { LogoutResolver } from '../login/logout-resolver.service';
 import { HomeComponent } from './home.component';
 import { HomeEmptyComponent } from './home-empty/home-empty.component';
 import { ConversationComponent } from './conversation/conversation.component';

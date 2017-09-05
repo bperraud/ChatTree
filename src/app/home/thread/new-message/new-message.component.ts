@@ -62,7 +62,7 @@ export class NewMessageComponent implements OnInit {
         100
       );
 
-  };
+  }
 
   sendMessage() {
     this.message.thread = this.thread.id;
@@ -83,7 +83,7 @@ export class NewMessageComponent implements OnInit {
       data.msgId,
       data.date,
       $this.message.content,
-      $this.auth.getUser().id,
+      AuthService.getUser().id,
       $this.message.thread
     );
 

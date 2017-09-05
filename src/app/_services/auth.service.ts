@@ -36,7 +36,7 @@ export class AuthService {
     this.userSource.next(user);
   }
 
-  getUser(): ConnectedUser {
+  static getUser(): ConnectedUser {
     return JSON.parse(localStorage.getItem('currentUser'));
   }
 

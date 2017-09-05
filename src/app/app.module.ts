@@ -9,9 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Services
-import { PostsService } from './_services/posts.service';
-import { DialogService } from "app/_services/dialog.service";
-
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 

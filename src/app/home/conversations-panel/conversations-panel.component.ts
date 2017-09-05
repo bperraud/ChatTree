@@ -178,7 +178,7 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
     $this.auth.setUser($this.user);
 
     // Update the remote user info (server session)
-    $this.http.put(`${$this.base_url}/api/set-user`, { user: $this.auth.getUser() }, $this.setHttpOptions())
+    $this.http.put(`${$this.base_url}/api/set-user`, { user: AuthService.getUser() }, $this.setHttpOptions())
       .subscribe(res => {
         let parsedRes = ConversationsPanelComponent.parseRes(res);
         let success = parsedRes.success;

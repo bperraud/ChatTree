@@ -37,7 +37,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
     private threadService: ThreadService,
     private ws: WebSocketService
   ) {
-    this.user = this.auth.getUser();
+    this.user = AuthService.getUser();
     this.ws.message$.subscribe(
       msg => {
         if (msg.thread === this.activeThread.id)
