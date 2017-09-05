@@ -1,0 +1,163 @@
+@import '../../../var';
+
+#conversations-panel {
+  position: fixed;
+  min-width: 200px;
+  width: calc((1 / 3) * 100%);
+  max-width: 300px;
+  height: 100%;
+  border-right: 1px solid @line;
+  background-color: @main-background-color;
+  // ---------------------------------------------------------------------------
+  //  OPTIONS BAR
+  // ---------------------------------------------------------------------------
+  .options {
+    padding: 5px 10px 5px 15px;
+    position: relative;
+    height: 60px;
+    background-color: @main-background-color;
+
+    input {
+      width: calc(~'100% - 40px');
+      height: 100%;
+      border: 0;
+      padding-left: 5px;
+      color: @font-color;
+      background-color: @main-background-color;
+      margin: auto 0;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .new-conversation {
+      height: 100%;
+      background: none;
+      text-align: center;
+      transition: 200ms;
+
+      &:hover {
+        color: @main-color;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      & .fa {
+        margin: auto;
+      }
+    }
+  }
+  // ---------------------------------------------------------------------------
+  //  CONVERSATIONS LIST
+  // ---------------------------------------------------------------------------
+  .conversations {
+    height: -webkit-calc(~'100% - 60px');
+    height: -moz-calc(~'100% - 60px');
+    height: calc(~'100% - 60px');
+    overflow-x: hidden;
+    overflow-y: auto;
+    direction: rtl;
+  }
+  // ---------------------------------------------------------------------------
+  //  CONVERSATIONS PREVIEW
+  // ---------------------------------------------------------------------------
+  .conversation-container {
+    width: 100%;
+    height: 70px;
+    padding: 10px;
+    text-align: left;
+    direction: ltr;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .conversation-wrapper {
+    background-color: grey;
+  }
+
+  .conversation {
+    width: 100%;
+    display: block;
+    position: relative;
+    transition: 300ms;
+    color: @font-color;
+
+    &:after {
+      position: absolute;
+      content: '';
+      width: 0;
+      height: 0;
+      top: 23px;
+      right: 0;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      border-right: 12px solid @main-background-color;
+      opacity: 0;
+    }
+
+    &:hover, &.active {
+      text-decoration: none;
+      background-color: @main-color;
+      transition: all 300ms;
+
+      &:after {
+        opacity: 1;
+        transition: all 300ms;
+      }
+    }
+
+    img {
+      height: 50px;
+      width: 50px;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .content {
+      display: inline-block;
+      margin: auto 15px auto 0;
+      overflow: hidden;
+
+      .title {
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .members {
+        word-break: keep-all;
+        font-size: 0.7em;
+
+        .member:not(.last)::after {
+          content: ", ";
+        }
+      }
+    }
+  }
+  // ---------------------------------------------------------------------------
+  //  SCROLLBAR
+  // ---------------------------------------------------------------------------
+  .conversations::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+    display: none;
+  }
+
+  .conversations::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+    display: none;
+  }
+
+  .conversations::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
+    display: none;
+  }
+}
