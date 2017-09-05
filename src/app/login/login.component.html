@@ -1,0 +1,169 @@
+<div class="login">
+  <fieldset>
+    <div class="logmod">
+      <div id="logo-container">
+        <div id="logo">
+          <img src="/assets/images/logo/logo.png" alt="logo"/>
+        </div>
+      </div>
+      <div class="logmod__wrapper">
+        <div class="logmod__container">
+          <ul class="logmod__tabs">
+            <li id="login-tab-link" class="tab-link" data-tabtar="lgm-2">
+              <button>Connexion</button>
+            </li>
+            <li id="signup-tab-link" class="tab-link" data-tabtar="lgm-1">
+              <button>Inscription</button>
+            </li>
+          </ul>
+          <div class="logmod__tab-wrapper">
+
+            <!-- SIGNUP -->
+            <div class="logmod__tab lgm-1">
+              <div id="signup-tab">
+                <div class="logmod__form">
+                  <form name="signupForm"
+                        accept-charset="utf-8"
+                        class="simform"
+                        novalidate
+                        #signupForm="ngForm"
+                        (ngSubmit)="onSignupSubmit(signupForm.form.valid, signupForm)"
+                  >
+                    <fieldset>
+                      <div class="input">
+                        <input name="email"
+                               type="email"
+                               placeholder="Email"
+                               class="form-control"
+                               [(ngModel)]="signup_user.email"
+                               (keyup)="$event.keyCode !== 13 ? signup_form.emailChanged = true : null"
+                               required
+                               email
+                               #signupEmail="ngModel"
+                        />
+                        <span><i class="fa fa-envelope-o"></i></span>
+                        <div [hidden]="signup_form.emailErrorMessage === '' || signup_form.emailChanged"
+                             class="error">{{ signup_form.emailErrorMessage }}
+                        </div>
+                        <div [hidden]="signupEmail.valid || (signupEmail.pristine && !signupForm.submitted)"
+                             class="error">Veuillez renseigner un email valide svp
+                        </div>
+                      </div>
+
+                      <div class="input">
+                        <input name="password"
+                               type="password"
+                               placeholder="Mot de passe (4 caractères minimum)"
+                               class="form-control"
+                               [(ngModel)]="signup_user.password"
+                               required
+                               minlength="4"
+                               #signupPassword="ngModel"
+                        />
+                        <span><i class="fa fa-lock"></i></span>
+                        <div [hidden]="signupPassword.valid || (signupPassword.pristine && !signupForm.submitted)"
+                             class="error">Veuillez renseigner un mot de passe svp (4 caractères minimum)
+                        </div>
+                      </div>
+
+                      <div class="input">
+                        <input name="confirm_password"
+                               type="password"
+                               placeholder="Confirmation"
+                               class="form-control"
+                               [(ngModel)]="signup_user.confirmPassword"
+                               (keyup)="$event.keyCode !== 13 ? signup_form.confirmPasswordChanged = true : null"
+                               required
+                               #signupPasswordConfirm="ngModel"
+                        />
+                        <span><i class="fa fa-lock"></i></span>
+                        <div
+                          [hidden]="signup_form.confirmPasswordErrorMessage === '' || signup_form.confirmPasswordChanged"
+                          class="error">{{ signup_form.confirmPasswordErrorMessage }}
+                        </div>
+                        <div
+                          [hidden]="signupPasswordConfirm.valid || (signupPasswordConfirm.pristine && !signupForm.submitted)"
+                          class="error">Veuillez confirmer votre mot de passe svp
+                        </div>
+                      </div>
+
+                      <button
+                        id="submit-signup" class="submit"
+                        [class.disabled]="!signupForm.form.valid">
+                        <i class="fa fa-long-arrow-right"></i>
+                      </button>
+                    </fieldset>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- LOGIN -->
+            <div class="logmod__tab lgm-2">
+              <div id="login-tab">
+                <div class="logmod__form">
+                  <form name="loginForm"
+                        accept-charset="utf-8"
+                        class="simform"
+                        novalidate
+                        #loginForm="ngForm"
+                        (ngSubmit)="onLoginSubmit(loginForm.form.valid)"
+                  >
+                    <fieldset>
+                      <div class="input">
+                        <input name="identifiant"
+                               placeholder="Email ou nom d'utilisateur"
+                               class="form-control"
+                               [(ngModel)]="login_user.email"
+                               (keyup)="$event.keyCode !== 13 ? login_form.emailChanged = true : null"
+                               required
+                               #identifiant="ngModel"
+                        />
+                        <span><i class="fa fa-envelope-o"></i></span>
+                        <div [hidden]="login_form.emailErrorMessage === '' || login_form.emailChanged"
+                             class="error">{{ login_form.emailErrorMessage }}
+                        </div>
+                        <div [hidden]="identifiant.valid || (identifiant.pristine && !loginForm.submitted)"
+                             class="error">Veuillez renseigner un identifiant svp
+                        </div>
+                      </div>
+
+                      <div class="input">
+                        <input name="password"
+                               type="password"
+                               placeholder="Mot de passe"
+                               class="form-control"
+                               [(ngModel)]="login_user.password"
+                               (keyup)="$event.keyCode !== 13 ? login_form.passwordChanged = true : null"
+                               required
+                               #password="ngModel"
+                        />
+                        <span><i class="fa fa-lock"></i></span>
+                        <div [hidden]="login_form.passwordErrorMessage === '' || login_form.passwordChanged"
+                             class="error">{{ login_form.passwordErrorMessage }}
+                        </div>
+                        <div [hidden]="password.valid || (password.pristine && !loginForm.submitted)"
+                             class="error">Veuillez renseigner un mot de passe svp
+                        </div>
+                      </div>
+
+                      <div id="forgotten-password" class="input">
+                        <a routerLink="forgotten-password">Mot de passe oublié ?</a>
+                      </div>
+
+                      <button
+                        id="submit-connection" class="submit"
+                        [class.disabled]="!loginForm.form.valid">
+                        <i class="fa fa-long-arrow-right"></i>
+                      </button>
+                    </fieldset>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</div>
