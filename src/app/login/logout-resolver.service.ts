@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { Resolve } from '@angular/router';
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class LogoutResolver implements Resolve<boolean> {
