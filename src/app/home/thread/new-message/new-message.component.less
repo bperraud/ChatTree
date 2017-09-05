@@ -1,0 +1,83 @@
+@import '../../../../var';
+
+.footer {
+  height: 50px;
+  bottom: 0;
+  position: fixed;
+  width: calc((2 / 3) * 100%);
+  border-top: 1px solid @line;
+  background-color: @main-background-color;
+  display: flex;
+
+  .tree-view-link {
+    border-right: 1px solid @line;
+  }
+
+  .message-zone {
+    width: calc(~'100% - 100px');
+    position: relative;
+    display: flex;
+
+    textarea {
+      padding: 10px;
+      height: 100%;
+      width: calc(~'100% - 30px');
+      border: none;
+      outline: 0;
+      resize: none;
+      color: @font-color;
+      background-color: @main-background-color;
+    }
+
+    .send-message {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      right: 0;
+      vertical-align: text-top;
+      text-align: center;
+      cursor: pointer;
+      height: 100%;
+      width: 30px;
+
+      &:hover {
+        .fa {
+          color: @main-color;
+        }
+      }
+
+      .fa {
+        transition: 200ms;
+        font-size: 2em;
+      }
+    }
+  }
+
+  .more, .tree-view-link {
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    transition: 300ms;
+    &:hover {
+      background-color: @main-color-light;
+    }
+
+    .fa {
+      margin: auto;
+    }
+  }
+
+  .more {
+    border-left: 1px solid @line;
+  }
+
+  @media screen and (max-width: 600px) {
+    width: calc(~'100% - 200px');
+  }
+
+  @media screen and (min-width: 900px) {
+    width: calc(~'100% - 300px');
+  }
+}
