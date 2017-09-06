@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Conversation } from '../_models/conversation';
 import { Subject } from 'rxjs/Subject';
-import { defaultPP } from "app/home/_models/conversation";
+import { defaultPP } from '../_models/conversation';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from '../../_services/auth.service';
 import { Http, RequestOptions, Response, Headers } from '@angular/http';
 
 import 'rxjs/add/observable/throw';
+import "rxjs/add/operator/catch";
 
 @Injectable()
 export class ConversationService {

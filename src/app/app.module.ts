@@ -35,8 +35,6 @@ import { AuthService } from './_services/auth.service';
     PageNotFoundComponent
   ],
   providers   : [ // Add the global services
-    PostsService,
-    DialogService,
     AuthService,
     { provide: ToastOptions, useClass: ToastCustomOptions }
   ],

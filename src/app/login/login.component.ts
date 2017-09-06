@@ -11,7 +11,7 @@ import * as $ from 'jquery';
 @Component({
   selector   : 'app-login',
   templateUrl: './login.component.html',
-  styleUrls  : ['./login.component.css'],
+  styleUrls  : ['./login.component.less'],
   animations : [fadeInRouteAnimation]
 })
 export class LoginComponent implements OnInit {
