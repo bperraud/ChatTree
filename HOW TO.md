@@ -35,3 +35,7 @@ PostgreSQL est un SGBDR qui assurera la pérénité de nos données (conversatio
 Cette installation dépend de l'IDE utilisé, mais en soi, Angular est un package node s'installant _via_ npm, par exemple à l'aide d'Angular CLI (cf <https://angular.io/guide/quickstart>).
 
 ** Pas besoin de l'installer manuellement sauf pour suivre des tutos, le code source du projet sera directement accessible sur un _repo_ git.**
+
+## Apprendre Angular
+
+Visiter le site officiel et suivre le tuto de base : <https://angular.io/guide/quickstart>. Les étapes de lancement peuvent être automatisées selon l'IDE utilisé.
