@@ -134,7 +134,6 @@ export class WebSocketService {
   }
 
   connectToConvNsp(convId: Number) {
-    console.log('TRY TO CONNECT');
     const $this = this;
 
     // Instantiation of the connection
