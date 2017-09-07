@@ -13,11 +13,6 @@ import io from 'socket.io-client';
 @Injectable()
 export class WebSocketService {
 
-  private ws_uri                      = 'ws://localhost:3000';
-  private ws: WebSocket               = null;
-  private pendingRequests: object     = {};
-  private pendingRequestsThis: object = {};
-
   // Observable sources
   private messageSource = new Subject<Message>();
 
@@ -41,7 +36,7 @@ export class WebSocketService {
 
   //onNewConversation(data) {
   //  var newConv = data.content.conversation;
-  //  delete newConv.members[AuthService.getUser()._id];
+  //  delete newConv.members[this.auth.getUser()._id];
   //
   //  $rootScope.conversations[newConv._id] = newConv;
   //  $rootScope.conversationsArray.push(newConv);
@@ -95,13 +90,7 @@ export class WebSocketService {
     return UUID.UUID();
   }
 
-  private destroy() {
-    this.ws              = null;
-    this.pendingRequests = {};
-  }
-
-  connect2(): Observable<boolean> {
-    const $this   = this;
+  connect(): Observable<boolean> {
     const auth    = this.auth;
     let onLoggout = false;
 
@@ -132,7 +121,7 @@ export class WebSocketService {
           setTimeout(() => {
             onLoggout = false; //TODO: improve this code... (the onLoggout var)
             reject(error);
-            auth.logout().subscribe($this.destroy);
+            auth.logout().subscribe();
           }, 3000);
         };
 
@@ -144,151 +133,47 @@ export class WebSocketService {
     );
   }
 
-  connect(): Observable<boolean> {
-    const $this   = this;
-    const auth    = this.auth;
-    let onLoggout = false;
-    return Observable.fromPromise(
-      new Promise((resolve, reject) => {
+  connectToConvNsp(convId: Number) {
+    console.log('TRY TO CONNECT');
+    const $this = this;
 
-        let onOpen = function (evt) {
-          console.log("Websocket connected:");
-          console.log(evt);
-          resolve(true);
-        };
+    // Instantiation of the connection
+    this.activeConvSocket = io(`${this.socket_url}/conv-${convId}?token=${this.auth.getToken()}`);
 
-        let onMessage = function (evt) {
-          console.log("Websocket message received:");
-          console.log(evt.data);
-          let wsMsg             = JSON.parse(evt.data),
-              data              = wsMsg.data,
-              id                = wsMsg.id,
-              action            = wsMsg.action,
-              handler: Function = $this.pendingRequests[id],
-              $$this            = $this.pendingRequestsThis[id];
+    let onConnection = function () {
+      console.log(`Websocket conv#${convId} connected`);
 
-          // Answer from self action
-          if (id && handler !== undefined) {
-            handler(data, $$this);
-            delete $this.pendingRequests[id];
-            return;
-          }
+    };
 
-          // We received a message without being the sender
-          if (handler === undefined && action) {
-            switch (action) {
-              //case "new-conversation":
-              //  console.log("NEW CONV");
-              //  onNewConversation(data);
-              //  break;
-              case "new-message":
-                console.log("ws new-message");
-                $this.onNewMessage(data.message);
-                break;
-              //case "new-thread":
-              //  console.log("NEW THREAD");
-              //  onNewThread(data);
-              //  break;
-              //case "update-thread":
-              //  console.log("UPDATE THREAD");
-              //  onUpdateThread(data);
-              //  break;
-              default:
-                console.warn("Unkwown action from ws message");
-            }
-            return;
-          }
-        };
+    let onDisconnection = function () {
+      console.log(`Websocket conv#${convId} disconnected`);
+    };
 
-        let onError = function (error) {
-          console.log("WebSocket error:");
-          console.log(error);
-          if (onLoggout) return;
+    let onConnectError = function (error) {
+      console.error(`Error at connection (conv#${convId})`);
+      console.error(error);
+    };
 
-          this.toastService.showError('Oups, erreur serveur<br/>Vous allez être déconnecté... :/');
-          onLoggout = true;
+    let onError = function (error) {
+      console.error(`WebSocket error (conv#${convId}):`);
+      console.error(error);
+    };
 
-          setTimeout(() => {
-            onLoggout = false; //TODO: improve this code... (the onLoggout var)
-            reject(error);
-            auth.logout().subscribe($this.destroy);
-          }, 3000);
-        };
+    let onCreateMessageOK = function (data) {
+      console.log("onCreateMessageOK");
+      $this.onNewMessage(data.message);
+    };
 
-        let onClose = function (evt) {
-          console.log("Websocket socket closed:");
-          console.log(evt);
-          if (evt.code === 1006) {
-            onError(evt);
-            return;
-          }
-
-          auth.logout().subscribe(this.destroy);
-        };
-
-        this.ws           = new WebSocket(this.ws_uri);
-        this.ws.onopen    = onOpen;
-        this.ws.onmessage = onMessage;
-        this.ws.onerror   = onError;
-        this.ws.onclose   = onClose;
-      })
-    );
-  }
-
-  connectToConvNsp(convId: Number): Observable<boolean> {
-    const $this   = this;
-
-    return Observable.fromPromise(new Promise((resolve, reject) => {
-
-        // Instantiation of the connection
-        this.activeConvSocket = io(`${this.socket_url}/conv-${convId}?token=${this.auth.getToken()}`);
-
-        let onConnection = function () {
-          console.log(`Websocket conv#${convId} connected`);
-          resolve(true);
-        };
-
-        let onConnectError = function (error) {
-          console.error(`Error at connection (conv#${convId})`);
-          console.error(error);
-          resolve(false);
-        };
-
-        let onError = function (error) {
-          console.error(`WebSocket error (conv#${convId}):`);
-          console.error(error);
-        };
-
-        let onCreateMessageOK = function (data) {
-          console.log("onCreateMessageOK");
-          console.log(data);
-          console.log(typeof data);
-          $this.onNewMessage(data);
-        };
-
-        // Event bindings
-        this.activeConvSocket.on('connect', onConnection);
-        this.activeConvSocket.on('connect_error', onConnectError);
-        this.activeConvSocket.on('error', onError);
-        this.activeConvSocket.on('create-message', onCreateMessageOK);
-      })
-    );
+    // Event bindings
+    this.activeConvSocket.on('connect', onConnection);
+    this.activeConvSocket.on('disconnect', onDisconnection);
+    this.activeConvSocket.on('connect_error', onConnectError);
+    this.activeConvSocket.on('error', onError);
+    this.activeConvSocket.on('create-message', onCreateMessageOK);
   }
 
   joinThreadRoom(threadId: Number) {
     this.activeConvSocket.emit('join-thread-room', threadId);
-  }
-
-  sendRequest(msg: WsMessage, callback?: Function, $this?) {
-    msg.id    = WebSocketService.generateUuid();
-    msg.token = this.auth.getToken();
-
-    if (callback !== null) {
-      this.pendingRequests[msg.id] = callback;
-      if ($this !== null)
-        this.pendingRequestsThis[msg.id] = $this;
-    }
-    this.ws.send(JSON.stringify(msg));
   }
 
   createMessage(message: Message) {
@@ -297,10 +182,14 @@ export class WebSocketService {
   }
 
   close() {
-    this.mainSocket.close();
-    if (this.activeConvSocket)
+    if (this.mainSocket) {
+      this.mainSocket.close();
+      this.mainSocket = null;
+    }
+    if (this.activeConvSocket) {
       this.activeConvSocket.close();
-    //this.ws.close();
+      this.activeConvSocket = null;
+    }
   }
 
 }

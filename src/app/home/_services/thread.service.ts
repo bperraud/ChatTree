@@ -41,7 +41,7 @@ export class ThreadService {
     else {
       this.activeThread.messages.push(msgs);
       timout = 0;
-      if (msgs.author !== AuthService.getUser().id) {
+      if (msgs.author !== this.auth.getUser().id) {
         let scrollElem = this.scrollContainer.nativeElement;
         // If we received a message, we animate if the container is already at bottom
         animate        = scrollElem.scrollHeight - (scrollElem.scrollTop + $(scrollElem).innerHeight()) <= 200;

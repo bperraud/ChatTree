@@ -20,7 +20,10 @@ router.get('/get-thread/:convId/:id', auth.verifyToken, (req, res) => {
   let threadId = +req.params.id;
 
   if (user.conversations.indexOf(convId) === -1) {
-    return res.json(new Message(
+    console.log(req.session);
+    console.log(user);
+    console.log(user.conversations);
+    return res.status(401).json(new Message(
       {},
       false,
       'Erreur d\'accès'

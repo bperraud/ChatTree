@@ -39,31 +39,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('currentUser'));
-    this.auth.verify().subscribe(res => {
-      if (!res['success'] === true) {
-        this.logout();
-        this.router.navigate(['/login']);
-        return false;
-      }
 
-      if (!localStorage.getItem('isLoggedIn')) {
-        // TODO: see if we need to keep this, since we are not supposed to reload the home component except on logout/login
-        this.showWelcomeHome();
-        localStorage.setItem('isLoggedIn', 'true');
-      }
+    if (!localStorage.getItem('isLoggedIn')) {
+      // TODO: see if we need to keep this, since we are not supposed to reload the home component except on logout/login
+      this.showWelcomeHome();
+      localStorage.setItem('isLoggedIn', 'true');
+    }
 
-      console.info("Current user:");
-      console.info(this.user);
-
-      const socket = io('http://localhost:3000');
-      //socket.
-      //const socket2 = io('http://localhost:3000/my-namespace');
-      //this.socket.on('news', data => {
-      //  console.log("zezzzz");
-      //  console.log(data);
-      //  this.socket.emit('my other event', { my: 'data' });
-      //});
-    });
+    console.info("Current user:");
+    console.info(this.user);
   }
 
   ngOnDestroy() {

@@ -10,7 +10,7 @@ export class InitWebSocketResolver implements Resolve<boolean> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     console.log("WS INIT!");
-    return this.ws.connect2().map(isConnected => {
+    return this.ws.connect().map(isConnected => {
       if (!isConnected) {
         console.log("Some error of ws connection... :/");
         //this.logout(); //TODO: logout service (+ redirect)

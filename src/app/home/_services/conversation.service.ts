@@ -76,6 +76,8 @@ export class ConversationService {
       .map(ConversationService.extractData)
       .map(res => {
         let conv = res.conversation;
+        console.log("in getConversation");
+        console.log(conv);
         this.activeConversationSource.next(conv); // TODO: remove if useless
         this.activeConversation = conv;
         this.activeConversation.threads.forEach(thread => thread.messages = []);

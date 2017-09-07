@@ -8,6 +8,7 @@
     <!--&gt;-->
     <img
       src="/assets/images/users/default.jpg"
+      (click)="showUserInformation = !showMembersList ? !showUserInformation : showUserInformation"
     >
   </div>
   <div class="title">
@@ -16,9 +17,9 @@
        ng-click="showMembersList = !showUserInformation ? !showMembersList : showMembersList"></i>
   </div>
 </div>
-<div class="members-list header-popup" ng-show="showMembersList">
+<div class="members-list header-popup" [hidden]="!showMembersList">
   <div class="triangle"></div>
-  <div class="close" ng-click="showMembersList = false">
+  <div class="close" (click)="showMembersList = false">
     <i class="fa fa-times"></i>
   </div>
   <span class="number"><strong ng-bind="activeConv.members.length"></strong> participants</span>
@@ -32,9 +33,9 @@
     </li>
   </ul>
 </div>
-<div class="user-information header-popup" ng-show="showUserInformation">
+<div class="user-information header-popup" [hidden]="!showUserInformation">
   <div class="triangle"></div>
-  <div class="close" ng-click="showUserInformation = false">
+  <div class="close" (click)="showUserInformation = false">
     <i class="fa fa-times"></i>
   </div>
   <ul class="fixed-data">
@@ -43,8 +44,8 @@
   </ul>
   <hr>
   <ul class="action">
-    <li><a href="#" ng-click="profileEditor(); showUserInformation = false"><i class="fa fa-pencil"></i>Modifier mon profil</a></li>
+    <li><a href="#" (click)="showUserInformation = false" ng-click="profileEditor(); showUserInformation = false"><i class="fa fa-pencil"></i>Modifier mon profil</a></li>
     <li><a href="#"><i class="fa fa-cog"></i>Paramètres</a></li>
-    <li><a href="#" ng-click="logout()"><i class="fa fa-sign-out"></i>Déconnexion</a></li>
+    <li><a (click)="logout()"><i class="fa fa-sign-out"></i>Déconnexion</a></li>
   </ul>
 </div>

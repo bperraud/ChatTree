@@ -14,11 +14,14 @@ let session;
 /**
  *
  * @param newMsg {Message}
- * @param nsp {Namespace}
+ * @param nsp {SocketIO.Namespace}
  * @param room {String}
  */
 function createMessage(newMsg, nsp, room) {
   console.log("createMessage");
+  console.log(newMsg);
+
+  // TODO: Figure out the weeeeird bug of some messages not properly inserted :(
 
   // Insert the new message
   db.query(
@@ -29,23 +32,25 @@ function createMessage(newMsg, nsp, room) {
       `, (err, dbres) => {
       if (err) throw err;
 
+      console.log("New message id: ", dbres.rows[0].id);
       newMsg.id = dbres.rows[0].id;
       newMsg.date = dbres.rows[0].creation_date;
 
-      console.log(room);
       // Broadcast to all members in the room
       nsp.to(room).emit('create-message', {message: newMsg});
-
-/*      socket.emit('create-message-done', {message: newMsg});
-
-
-      // Broadcast to all members in the room
-      socket.to(room).emit('create-message', {message: newMsg});*/
     });
 
 }
 
 module.exports = {
+
+  /**
+   *
+   * @returns {SocketIO.Server}
+   */
+  getIoServer: function() {
+    return io;
+  },
 
   setIoServer: function (server) {
     io = server;
@@ -60,12 +65,13 @@ module.exports = {
    * @param convId {Number}
    */
   createConvNsp: function (convId) {
+    console.log("createConvNsp");
 
-    const nsp = io.of(`conv-${convId}`).use(sharedSession(session, {
+    let nsp = io.of(`conv-${convId}`).use(sharedSession(session, {
       autoSave: true
     }));
 
-    console.log(`WS nsp created for conv#${convId}`);
+    console.log(`WS nsp created/retrieved for conv#${convId}`);
 
     nsp.use((socket, next) => {
       let token = socket.handshake.query.token;
@@ -78,16 +84,19 @@ module.exports = {
     });
 
     nsp.on('connection', (socket) => {
-      console.log(`user connected to conv#${convId}`);
+      console.log(`user ${socket.id} connected to conv#${convId}`);
+      nsp.clients(function(error, clients) {
+        console.log(clients);
+      });
 
       socket.on('disconnect', () => {
-        console.log(`user disconnected from conv#${convId}`);
+        console.log(`user ${socket.id} disconnected from conv#${convId}`);
       });
 
       socket.on('join-thread-room', (threadId) => {
         socket.join(threadId);
         socket.handshake.session.user.activeThread = threadId;
-        console.log(`user joined room for thread#${threadId}`);
+        console.log(`user ${socket.id} joined room for thread#${threadId}`);
       });
 
       socket.on('create-message', (data) => {
@@ -105,6 +114,7 @@ module.exports = {
       });
     });
 
+    return nsp;
   }
 
 

@@ -13,7 +13,7 @@ const Message      = require('../models/message');
 
 const auth = require('../middleware/auth');
 
-const socket = require('../websocket/conversation.io');
+const convSocket = require('../websocket/conversation.io');
 
 // Get a conversation (with its threads)
 router.get('/get-conv/:id', auth.verifyToken, (req, res) => {
@@ -21,7 +21,10 @@ router.get('/get-conv/:id', auth.verifyToken, (req, res) => {
   let convId = +req.params.id;
 
   if (user.conversations.indexOf(convId) === -1) {
-    return res.json(new Message(
+    console.log(req.session);
+    console.log(user);
+    console.log(user.conversations);
+    return res.status(401).json(new Message(
       {},
       false,
       'Erreur d\'accès'
@@ -102,8 +105,11 @@ router.get('/get-conv/:id', auth.verifyToken, (req, res) => {
         }
       });
 
-      // Create the socket nsp for that conversation
-      socket.createConvNsp(convId);
+      // Create the socket nsp for that conversation IF NEEDED
+      if (!Object.keys(convSocket.getIoServer().nsps)
+          .find(nspName => nspName === `/conv-${convId}`)) {
+        convSocket.createConvNsp(convId);
+      }
 
       return res.json(new Message(
         {conversation},

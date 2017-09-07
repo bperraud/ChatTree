@@ -153,14 +153,15 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
     if (this.newConversation.members.length === 0)
       return;
 
-    this.ws.sendRequest(new WsMessage(
+    // TODO: rewrite the createConversation function with socket io
+/*    this.ws.sendRequest(new WsMessage(
       "create-conversation", {
         title  : this.newConversation.title,
         members: this.newConversation.members
           .concat(this.user)    // Add the current user
           .map(user => user.id) // Only keep userIds
       }
-    ), this.onNewConversation, this);
+    ), this.onNewConversation, this);*/
   }
 
   //noinspection JSMethodCanBeStatic
@@ -178,7 +179,7 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
     $this.auth.setUser($this.user);
 
     // Update the remote user info (server session)
-    $this.http.put(`${$this.base_url}/api/set-user`, { user: AuthService.getUser() }, $this.setHttpOptions())
+    $this.http.put(`${$this.base_url}/api/set-user`, { user: this.auth.getUser() }, $this.setHttpOptions())
       .subscribe(res => {
         let parsedRes = ConversationsPanelComponent.parseRes(res);
         let success = parsedRes.success;

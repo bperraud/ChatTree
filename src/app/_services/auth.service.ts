@@ -36,7 +36,7 @@ export class AuthService {
     this.userSource.next(user);
   }
 
-  static getUser(): ConnectedUser {
+  getUser(): ConnectedUser {
     return JSON.parse(localStorage.getItem('currentUser'));
   }
 
@@ -61,7 +61,7 @@ export class AuthService {
 
   verify(): Observable<Object> {
     let currUser = JSON.parse(localStorage.getItem('currentUser'));
-    let token    = ( currUser && 'token' in currUser) ? currUser.token : this.token;
+    let token    = (currUser && 'token' in currUser) ? currUser.token : this.token;
     let headers  = new Headers({ 'x-access-token': token });
     return this.http.get(`${this.base_url}/check-state`, AuthService.setHttpOptions(headers))
       .map(res => AuthService.parseRes(res));

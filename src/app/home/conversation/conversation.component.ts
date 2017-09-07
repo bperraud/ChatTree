@@ -103,7 +103,7 @@ export class ConversationComponent implements OnInit {
     $rootScope.activeConv = {};
     $rootScope.activeConv.members = [];
 
-    var me = AuthService.getUser();
+    var me = this.auth.getUser();
     var res;
     if (me.surname !== undefined && me.name !== undefined)
       res = me.surname + ' ' + me.name;

@@ -29,8 +29,10 @@ export class NewMessageComponent implements OnInit {
   ) {
     this.ws.message$.subscribe(
       msg => {
-        console.log("lol");
-        console.log(msg);
+        if (msg.author === this.auth.getUser().id) {
+          // Reset the new message object
+          this.message = new Message();
+        }
       });
   }
 
@@ -68,29 +70,7 @@ export class NewMessageComponent implements OnInit {
     this.message.thread = this.thread.id;
     console.log('message to send :');
     console.log(this.message);
-    //this.ws.sendRequest(new WsMessage(
-    //  "create-message", {
-    //    message: this.message,
-    //    convId : this.thread.conversation
-    //  }
-    //), this.onNewMessage, this);
     this.ws.createMessage(this.message);
-  }
-
-  //noinspection JSMethodCanBeStatic
-  private onNewMessage(data, $this) {
-    let newMsg = new Message(
-      data.msgId,
-      data.date,
-      $this.message.content,
-      AuthService.getUser().id,
-      $this.message.thread
-    );
-
-    $this.threadService.addMessagesToActiveThread(newMsg);
-
-    // Reset the new message object
-    $this.message = new Message();
   }
 
 }

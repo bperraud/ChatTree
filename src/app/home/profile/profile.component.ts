@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LogoutService } from '../_services/logout.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
+  showUserInformation = false;
+  showMembersList = false;
 
-  ngOnInit() {
+  constructor(private logoutService: LogoutService) {}
+
+  ngOnInit() {}
+
+  logout() {
+    this.logoutService.logout();
   }
 
 }

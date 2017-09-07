@@ -27,8 +27,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   user: User;
   thread: Observable<Thread>;
   activeThread: Thread;
-
-  routeSubscription: Subscription;
+  messagesSubscription: Subscription;
 
   constructor(
     private auth: AuthService,
@@ -37,8 +36,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
     private threadService: ThreadService,
     private ws: WebSocketService
   ) {
-    this.user = AuthService.getUser();
-    this.ws.message$.subscribe(
+    this.user = this.auth.getUser();
+    this.messagesSubscription = this.ws.message$.subscribe(
       msg => {
         if (msg.thread === this.activeThread.id)
           this.threadService.addMessagesToActiveThread(msg);
@@ -70,8 +69,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Prevent memory leak when component destroyed
-    this.routeSubscription.unsubscribe();
+    this.messagesSubscription.unsubscribe();
   }
 
   showUserModal() {
@@ -105,8 +103,8 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   $scope.formatUserName = function (memberId) {
     var member;
-    if (memberId === AuthService.getUser()._id) {
-      member = AuthService.getUser();
+    if (memberId === this.auth.getUser()._id) {
+      member = this.auth.getUser();
     } else {
       member = $rootScope.conversations[$rootScope.activeConvId].members[memberId];
     }
@@ -125,7 +123,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
 
   $scope.getTemplateMessage = function (author) {
     switch (author) {
-      case AuthService.getUser()._id:
+      case this.auth.getUser()._id:
         return "/views/partials/message-me.html";
       default:
         return "/views/partials/message-other.html";

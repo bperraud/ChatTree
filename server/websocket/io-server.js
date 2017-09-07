@@ -51,10 +51,10 @@ module.exports = function (server) {
   });
 
   io.on('connection', (socket) => {
-    console.log('someone connected to global ws');
+    console.log(`someone ${socket.id} connected to global ws`);
 
     socket.on('disconnect', () => {
-      console.log('user disconnected from global ws');
+      console.log(`user ${socket.id} disconnected from global ws`);
     });
   });
 

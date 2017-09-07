@@ -6,7 +6,6 @@ import { ConversationComponent } from './conversation/conversation.component';
 import { ConversationsPanelComponent } from './conversations-panel/conversations-panel.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ThreadComponent } from './thread/thread.component';
-import { WebSocketService } from './_services/web-socket.service';
 import { ConversationService } from './_services/conversation.service';
 import { ThreadService } from './_services/thread.service';
 import { HomeEmptyComponent } from './home-empty/home-empty.component';
@@ -16,7 +15,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { SafeBase64ImgPipe } from './_pipes/safe-base64-img.pipe';
 import { UserNamePipe } from './_pipes/user-name.pipe';
-import { ToastService } from './_services/toast.service';
 import { Nl2BrPipe } from 'nl2br-pipe';
 import { NewMessageComponent } from './thread/new-message/new-message.component';
 import { LogoutService } from './_services/logout.service';
@@ -48,10 +46,8 @@ import { LogoutService } from './_services/logout.service';
   ],
   providers   : [
     LogoutService,
-    WebSocketService,
     ConversationService,
-    ThreadService,
-    ToastService
+    ThreadService
   ]
 })
 export class HomeModule {}

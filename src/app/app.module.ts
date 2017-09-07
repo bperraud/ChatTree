@@ -17,6 +17,8 @@ import { LoginRoutingModule } from './login/login-routing.module';
 import { ToastCustomOptions } from './toast-custom-options';
 import { ToastModule, ToastOptions } from 'ng2-toastr';
 import { AuthService } from './_services/auth.service';
+import { WebSocketService } from './home/_services/web-socket.service';
+import { ToastService } from './home/_services/toast.service';
 
 
 @NgModule({
@@ -36,6 +38,8 @@ import { AuthService } from './_services/auth.service';
   ],
   providers   : [ // Add the global services
     AuthService,
+    WebSocketService,
+    ToastService,
     { provide: ToastOptions, useClass: ToastCustomOptions }
   ],
   bootstrap   : [AppComponent]

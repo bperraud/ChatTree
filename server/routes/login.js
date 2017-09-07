@@ -8,6 +8,9 @@ const User    = require('../models/schemas/user');
 const Message = require('../models/message');
 const db      = require('../../server/db');
 
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
+
 router.get('/check-state', auth.verifyToken, (req, res) => {
   return res.json(new Message(
     {},
@@ -99,7 +102,13 @@ router.post('/login', (req, res) => {
         expiresIn: 60 * 60 * 24
       });
 
-      req.session.user = user;
+      (async(function () {
+        try {
+          await(req.session.user = user);
+        } catch (e) {
+          throw e;
+        }
+      }))().catch(e => console.error(e.stack));
 
       return res.json(new Message(
         {user, token},
@@ -112,6 +121,7 @@ router.post('/login', (req, res) => {
 
 router.delete('/logout', (req, res) => {
   req.session.destroy();
+
   return res.json(new Message(
     {},
     true,
