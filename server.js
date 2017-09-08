@@ -29,16 +29,16 @@ const api   = require('./server/routes/api');
 
 // Sessions
 let sess = session({
-  store:             new pgSession({
-    pool:      db.pool, // Connection pool
-    tableName: 'session' // Use another table-name than the default "session" one
-  }),
+  // store:             new pgSession({
+  //   pool:      db.pool, // Connection pool
+  //   tableName: 'session'
+  // }),
   secret:            'super cat',
   resave:            false,
   saveUninitialized: true
 });
 app.use(sess);
-
+require('./server/websocket/io-server').setSession(sess);
 require('./server/websocket/conversation.io').setSession(sess);
 
 // Logger
@@ -105,7 +105,7 @@ const server = http.createServer(app);
 /**
  * Create socket io server.
  */
-const io = require('./server/websocket/io-server')(server);
+const io = require('./server/websocket/io-server').startServer(server);
 
 /**
  * Listen on provided port, on all network interfaces.
