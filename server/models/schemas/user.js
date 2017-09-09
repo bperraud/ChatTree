@@ -1,19 +1,19 @@
 const bcrypt = require('bcrypt-nodejs');
 
-const atts     = ['id', 'login', 'password', 'email', 'firstname', 'lastname', 'pp'];
+const atts     = ['id', 'login', 'password', 'email', 'firstname', 'lastname', 'profile_picture'];
 const aug_atts = ['conversations'];
 const prefix   = 'u_';
 
 class User { // TODO: extends from a model super class which factorizes hydratation of atts
   constructor(obj) {
     // Atts
-    this.id        = null;
-    this.login     = null;
-    this.password  = null;
-    this.email     = null;
-    this.firstname = null;
-    this.lastname  = null;
-    this.pp        = null;
+    this.id              = null;
+    this.login           = null;
+    this.password        = null;
+    this.email           = null;
+    this.firstname       = null;
+    this.lastname        = null;
+    this.profile_picture = null;
 
     // Augmented atts
     this.conversations = [];

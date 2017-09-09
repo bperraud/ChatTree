@@ -1,20 +1,19 @@
 <div id="header">
   <div class="user">
-    <!--<img -->
-      <!--check-image-user-->
-      <!--ng-src="{{'images/users/' + user.pp}}"-->
-      <!--alt="profile-picture" -->
-      <!--ng-click="showUserInformation = !showMembersList ? !showUserInformation : showUserInformation"-->
-    <!--&gt;-->
     <img
-      src="/assets/images/users/default.jpg"
+      [src]="
+      ('data:image/jpg;base64,' +
+      (user.profile_picture ? user.profile_picture : defaultPP)
+      | safeBase64Img)"
+      src-fallback="/assets/images/users/default.jpg"
       (click)="showUserInformation = !showMembersList ? !showUserInformation : showUserInformation"
+      alt="user img"
     >
   </div>
   <div class="title">
-    <span ng-bind="headerTitle"></span>
+    <!--<span ng-bind="headerTitle"></span>-->
     <i class="fa fa-users"
-       ng-click="showMembersList = !showUserInformation ? !showMembersList : showMembersList"></i>
+       (click)="showMembersList = !showUserInformation ? !showMembersList : showMembersList"></i>
   </div>
 </div>
 <div class="members-list header-popup" [hidden]="!showMembersList">
@@ -44,8 +43,8 @@
   </ul>
   <hr>
   <ul class="action">
-    <li><a href="#" (click)="showUserInformation = false" ng-click="profileEditor(); showUserInformation = false"><i class="fa fa-pencil"></i>Modifier mon profil</a></li>
-    <li><a href="#"><i class="fa fa-cog"></i>Paramètres</a></li>
+    <li><a href="" (click)="showUserInformation = false" ng-click="profileEditor(); showUserInformation = false"><i class="fa fa-pencil"></i>Modifier mon profil</a></li>
+    <li><a href=""><i class="fa fa-cog"></i>Paramètres</a></li>
     <!--<li><a (click)="logout()"><i class="fa fa-sign-out"></i>Déconnexion</a></li>-->
     <li><a href="logout"><i class="fa fa-sign-out"></i>Déconnexion</a></li>
   </ul>

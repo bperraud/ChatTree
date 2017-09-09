@@ -84,6 +84,8 @@ router.post('/login', (req, res) => {
     }
 
     let user = new User(dbres.rows[0]);
+    // TODO: handle pp thumbnails and paths so we only retrieve the path at login
+    delete user['profile_picture'];
 
     if (!user.validPassword(req.body.password)) {
       return res.json(new Message(

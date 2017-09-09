@@ -18,7 +18,7 @@ import { UserNamePipe } from './_pipes/user-name.pipe';
 import { Nl2BrPipe } from 'nl2br-pipe';
 import { NewMessageComponent } from './thread/new-message/new-message.component';
 import { LogoutService } from './_services/logout.service';
-//import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { ImgFallbackModule } from 'ngx-img-fallback';
 
 @NgModule({
   declarations: [
@@ -40,9 +40,9 @@ import { LogoutService } from './_services/logout.service';
     ReactiveFormsModule,
     HttpModule,
     JsonpModule,
-    //SocketIoModule.forRoot({ url: 'http://localhost:3000', options: {} } as SocketIoConfig),
     ModalModule.forRoot(),
-    TypeaheadModule.forRoot()
+    TypeaheadModule.forRoot(),
+    ImgFallbackModule
   ],
   providers   : [
     LogoutService,

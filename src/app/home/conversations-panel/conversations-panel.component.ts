@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { WebSocketService } from '../_services/web-socket.service';
-import { WsMessage } from '../_models/ws-message';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { AuthService } from '../../_services/auth.service';
 import { defaultPP, User } from '../_models/user';
@@ -69,7 +68,7 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     console.log("ConversationsComponent INIT");
     this.convService.scrollContainer = this.scrollContainer;
-    this.user = JSON.parse(localStorage.getItem('currentUser'));
+    this.user = this.auth.getUser();
 
     this.convService.getConversations().subscribe((convs: Array<Conversation>) => {
       console.log('All conversations :');
