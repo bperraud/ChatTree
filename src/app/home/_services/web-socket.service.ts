@@ -13,14 +13,16 @@ import io from 'socket.io-client';
 @Injectable()
 export class WebSocketService {
 
+  // TODO: externalize the observables to the thread and conversation services instead
+
   // Observable sources
-  private messageSource      = new Subject<Message>();
-  private conversationSource = new Subject<Conversation>();
+  private messageSource        = new Subject<Message>();
+  private conversationSource   = new Subject<Conversation>();
   private conversationOKSource = new Subject<Conversation>();
 
   // Observable streams
-  message$      = this.messageSource.asObservable();
-  conversation$ = this.conversationSource.asObservable();
+  message$        = this.messageSource.asObservable();
+  conversation$   = this.conversationSource.asObservable();
   conversationOK$ = this.conversationOKSource.asObservable();
 
   constructor(
@@ -57,8 +59,17 @@ export class WebSocketService {
   //  });
   //}
 
+  /**
+   * For both messages of others and mine
+   *
+   * @param {Message} msg
+   */
   onNewMessage(msg: Message) {
     this.messageSource.next(msg);
+  }
+
+  onNewConversation(conv: Conversation) {
+    this.conversationSource.next(conv);
   }
 
   onCreateConversationOK(conv: Conversation) {
@@ -126,8 +137,8 @@ export class WebSocketService {
       };
 
       let onNewConversation = function (data) {
-        // console.log("onCreateConversation");
-        // $this.onCreateConversationOK(data.conversation);
+        console.log("onNewConversation");
+        $this.onNewConversation(data.conversation);
       };
 
         // Event bindings
@@ -135,7 +146,7 @@ export class WebSocketService {
         this.mainSocket.on('connect_error', onConnectError);
         this.mainSocket.on('error', onError);
         this.mainSocket.on('create-conversation', onCreateConversation);
-        this.mainSocket.on('new-conversation', onCreateConversation);
+        this.mainSocket.on('new-conversation', onNewConversation);
       })
     );
   }

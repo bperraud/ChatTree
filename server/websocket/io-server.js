@@ -115,6 +115,10 @@ function createConversation(newConv, user, socket) {
 
       await(client.query('COMMIT'));
 
+      newConv.root = rootId;
+      newConv.id = convId;
+      newConv.members = members;
+
       // Broadcast to all members of the conversation
       Object.keys(io.sockets.sockets)
         .map(id => { return io.sockets.sockets[id]; }) // Get the socket itself
@@ -125,14 +129,10 @@ function createConversation(newConv, user, socket) {
             session: socket.handshake.session
           };
         }) // Get the user
-        .filter(data => newConv.members.indexOf(data.user.id) !== -1) // Member of the conv
+        .filter(data => newConv.members.map(m => m.id).indexOf(data.user.id) !== -1) // Member of the conv
         .forEach(data => {
           socket.broadcast.to(data.socketId).emit('new-conversation', {conversation: newConv});
         });
-
-      newConv.root = rootId;
-      newConv.id = convId;
-      newConv.members = members;
 
       // Send to the client itself
       socket.emit('create-conversation', {conversation: newConv});

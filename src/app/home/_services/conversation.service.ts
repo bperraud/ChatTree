@@ -74,7 +74,6 @@ export class ConversationService {
 
     if (animate) {
       setTimeout(() => {
-        console.log('AAA');
         $(this.scrollContainer.nativeElement).animate({
             scrollTop: $(this.scrollContainer.nativeElement).prop("scrollHeight")
           },

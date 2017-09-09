@@ -48,9 +48,13 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
     this.conversationsSubscription = convService.conversations$.subscribe(
       convs => this.conversations = convs
     );
-    this.ws.conversationOK$.subscribe(
+    this.ws.conversation$.subscribe(
       conv => {
        this.onNewConversation(conv);
+      });
+    this.ws.conversationOK$.subscribe(
+      conv => {
+        this.onNewConversation(conv, true);
       });
   }
 
@@ -156,10 +160,6 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
 
     e.preventDefault();
 
-    // // Prevent accidentally validating the modal
-    // if (e.explicitOriginalTarget.id === 'input-members')
-    //   return;
-
     // If no members are added exit
     if (this.newConversation.members.length === 0)
       return;
@@ -172,7 +172,15 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
     this.ws.createConversation(newConv);
   }
 
-  private onNewConversation(conv) {
+  /**
+   *
+   * @param conv
+   * @param {boolean} mine True if callback of my own post
+   */
+  private onNewConversation(conv, mine: boolean = false) {
+    console.log("onNewConversation");
+    console.log(conv);
+
     let newConv     = new Conversation();
     newConv.id      = conv.id;
     newConv.title   = conv.title;
@@ -180,7 +188,7 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
     newConv.members = conv.members;
     newConv.picture = defaultConvPic;
 
-    this.convService.addConversation(newConv, true);
+    this.convService.addConversation(newConv, mine);
 
     this.user.conversations.push(newConv.id);
     this.auth.setUser(this.user);
@@ -189,17 +197,21 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
     this.http.put(`${this.base_url}/api/set-user`, { user: this.auth.getUser() }, this.setHttpOptions())
       .subscribe(res => {
         let parsedRes = ConversationsPanelComponent.parseRes(res);
-        let success = parsedRes.success;
+        let success   = parsedRes.success;
         if (!success) // TODO: directly use Node/Express errors encapsulation (status, statusText)
           console.error(parsedRes.message); // TODO: add a error service which logs errors & logout
 
-        // Reset the modal's new conversation object
-        this.newConversation = new Conversation();
+        if (mine) {
+          // Reset the modal's new conversation object
+          this.newConversation = new Conversation();
 
-        this.modalRef.hide(); // Close the modal
+          this.modalRef.hide(); // Close the modal
 
-        this.router.navigate(['/conversation', newConv.id]);
-        this.toastService.showSuccess('Conversation créée !');
+          this.router.navigate(['/conversation', newConv.id]);
+          this.toastService.showSuccess('Conversation créée !');
+        }
+
+        // TODO: find out how to notifiy for a new conversation created by others
       });
   }
 
