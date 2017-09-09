@@ -7,7 +7,7 @@
     </button>
   </div>
 
-  <div class="conversations">
+  <div class="conversations" #conversationContainer>
     <div class="conversations-wrapper">
       <!--<div class="conversation fade-item" ng-repeat="c in conversationsArray | reverseArray | filterAmongConversations:searchAmongConversations" ng-class="convActiveClass('{{c._id}}')">-->
       <a
@@ -20,7 +20,7 @@
         <div class="conversation-container">
           <img [src]="'data:image/jpg;base64,'+conv.picture | safeBase64Img" alt="conversation img"/>
           <div class="content">
-            <div class="title" *ngIf="conv.title !== null">{{conv.title}}</div>
+            <div class="title" *ngIf="conv.title">{{conv.title}}</div>
             <div class="members">
                 <span
                   *ngFor="let m of conv.members; last as isLast"
@@ -95,7 +95,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button id="create-new-conv-btn" class="btn ok-btn">OK</button>
+      <button type="submit" id="create-new-conv-btn" class="btn ok-btn">OK</button>
       <button type="button" class="btn cancel-btn" (click)="modalRef.hide()">Annuler</button>
     </div>
     <div

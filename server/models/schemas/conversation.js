@@ -1,5 +1,5 @@
 const atts     = ['id', 'fk_root_thread', 'title', 'picture'];
-const aug_atts = ['members', 'threads'];
+const aug_atts = ['members', 'root', 'threads'];
 const prefix   = 'c_';
 
 class Conversation {

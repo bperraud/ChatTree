@@ -3,10 +3,10 @@ import { UUID } from 'angular2-uuid';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { AuthService } from '../../_services/auth.service';
-import { WsMessage } from '../_models/ws-message';
 import { ToastService } from './toast.service';
 import { Subject } from 'rxjs/Subject';
 import { Message } from '../_models/message';
+import { Conversation } from '../_models/conversation';
 
 import io from 'socket.io-client';
 
@@ -14,10 +14,14 @@ import io from 'socket.io-client';
 export class WebSocketService {
 
   // Observable sources
-  private messageSource = new Subject<Message>();
+  private messageSource      = new Subject<Message>();
+  private conversationSource = new Subject<Conversation>();
+  private conversationOKSource = new Subject<Conversation>();
 
   // Observable streams
   message$      = this.messageSource.asObservable();
+  conversation$ = this.conversationSource.asObservable();
+  conversationOK$ = this.conversationOKSource.asObservable();
 
   constructor(
     private auth: AuthService,
@@ -33,20 +37,6 @@ export class WebSocketService {
   //-------------------------
   // WS NOTIFICATION HANDLERS
   //-------------------------
-
-  //onNewConversation(data) {
-  //  var newConv = data.content.conversation;
-  //  delete newConv.members[this.auth.getUser()._id];
-  //
-  //  $rootScope.conversations[newConv._id] = newConv;
-  //  $rootScope.conversationsArray.push(newConv);
-  //  localStorage.setItem('conversations', angular.toJson($rootScope.conversations));
-  //  localStorage.setItem('conversationsArray', angular.toJson($rootScope.conversationsArray));
-  //  $rootScope.$apply();
-  //  $rootScope.$emit('showToast', {
-  //    message: "Une nouvelle conversation vient d'être créée !"
-  //  });
-  //}
 
   //onNewThread(data) {
   //  console.log("onNewThread (other)");
@@ -71,6 +61,10 @@ export class WebSocketService {
     this.messageSource.next(msg);
   }
 
+  onCreateConversationOK(conv: Conversation) {
+    this.conversationOKSource.next(conv);
+  }
+
   //onUpdateThread(data) {
   //  console.log("onUpdateThread (other)");
   //  var updatedThread = data.content;
@@ -93,6 +87,7 @@ export class WebSocketService {
   connect(): Observable<boolean> {
     const auth    = this.auth;
     let onLoggout = false;
+    const $this = this;
 
     return Observable.fromPromise(new Promise((resolve, reject) => {
 
@@ -125,10 +120,22 @@ export class WebSocketService {
           }, 3000);
         };
 
+      let onCreateConversation = function (data) {
+        console.log("onCreateConversation");
+        $this.onCreateConversationOK(data.conversation);
+      };
+
+      let onNewConversation = function (data) {
+        // console.log("onCreateConversation");
+        // $this.onCreateConversationOK(data.conversation);
+      };
+
         // Event bindings
         this.mainSocket.on('connect', onConnection);
         this.mainSocket.on('connect_error', onConnectError);
         this.mainSocket.on('error', onError);
+        this.mainSocket.on('create-conversation', onCreateConversation);
+        this.mainSocket.on('new-conversation', onCreateConversation);
       })
     );
   }
@@ -158,8 +165,8 @@ export class WebSocketService {
       console.error(error);
     };
 
-    let onCreateMessageOK = function (data) {
-      console.log("onCreateMessageOK");
+    let onCreateMessage = function (data) {
+      console.log("onCreateMessage");
       $this.onNewMessage(data.message);
     };
 
@@ -168,7 +175,7 @@ export class WebSocketService {
     this.activeConvSocket.on('disconnect', onDisconnection);
     this.activeConvSocket.on('connect_error', onConnectError);
     this.activeConvSocket.on('error', onError);
-    this.activeConvSocket.on('create-message', onCreateMessageOK);
+    this.activeConvSocket.on('create-message', onCreateMessage);
   }
 
   joinThreadRoom(threadId: Number) {
@@ -178,6 +185,11 @@ export class WebSocketService {
   createMessage(message: Message) {
     let id = WebSocketService.generateUuid();
     this.activeConvSocket.emit('create-message', { message, id });
+  }
+
+  createConversation(conv: Conversation) {
+    let id = WebSocketService.generateUuid();
+    this.mainSocket.emit('create-conversation', { conv, id });
   }
 
   close() {

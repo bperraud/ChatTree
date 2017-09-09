@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { Conversation } from '../_models/conversation';
 import { Subject } from 'rxjs/Subject';
 import { defaultPP } from '../_models/conversation';
@@ -17,6 +17,8 @@ export class ConversationService {
 
   private conversations: Array<Conversation> = [];
           activeConversation: Conversation;
+
+  scrollContainer: ElementRef;
 
   // Observable sources
   private conversationsSource      = new Subject<Array<Conversation>>();
@@ -67,8 +69,19 @@ export class ConversationService {
     this.newConversationSource.next(true);
   }
 
-  addConversation(conv: Conversation) {
+  addConversation(conv: Conversation, animate: boolean = false) {
     this.conversations.push(conv);
+
+    if (animate) {
+      setTimeout(() => {
+        console.log('AAA');
+        $(this.scrollContainer.nativeElement).animate({
+            scrollTop: $(this.scrollContainer.nativeElement).prop("scrollHeight")
+          },
+          300
+        );
+      }, 500);
+    }
   }
 
   getConversation(id: number): Observable<Conversation> {

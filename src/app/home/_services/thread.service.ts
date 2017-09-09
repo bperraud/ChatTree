@@ -33,14 +33,14 @@ export class ThreadService {
   ) {}
 
   addMessagesToActiveThread(msgs: Array<Message> | Message) {
-    let timout  = 500,
+    let timeout  = 500,
         animate = true;
 
     if (Array.isArray(msgs))
       this.activeThread.messages.push(...msgs);
     else {
       this.activeThread.messages.push(msgs);
-      timout = 0;
+      timeout = 0;
       if (msgs.author !== this.auth.getUser().id) {
         let scrollElem = this.scrollContainer.nativeElement;
         // If we received a message, we animate if the container is already at bottom
@@ -58,7 +58,7 @@ export class ThreadService {
           },
           300
         );
-      }, timout);
+      }, timeout);
 
   }
 

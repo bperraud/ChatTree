@@ -64,11 +64,11 @@ router.get('/get-conversations', auth.verifyToken, (req, res) => {
 
       dbres.rows.forEach(row => {
         // New conversation found
-        if (row.id !== lastConvId) {
+        if (row.c_id !== lastConvId) {
           conversation = new Conversation(row);
           member       = new User(row);
           conversation.members.push(member);
-          lastConvId = row.id;
+          lastConvId = row.c_id;
           conversations.push(conversation);
         }
         // Conversation member found

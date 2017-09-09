@@ -31,7 +31,7 @@ module.exports = {
     });
 
     nsp.on('connection', (socket) => {
-      console.log(`someone connected to thread#${threadId}`);
+      console.log(`user connected to thread#${threadId}`);
 
       socket.on('disconnect', () => {
         console.log(`user disconnected from thread#${threadId}`);
