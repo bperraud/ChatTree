@@ -6,6 +6,7 @@ import { ConversationComponent } from './conversation/conversation.component';
 import { ConversationsPanelComponent } from './conversations-panel/conversations-panel.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ThreadComponent } from './thread/thread.component';
+import { TreeComponent } from './tree/tree.component';
 import { ConversationService } from './_services/conversation.service';
 import { ThreadService } from './_services/thread.service';
 import { HomeEmptyComponent } from './home-empty/home-empty.component';
@@ -31,7 +32,8 @@ import { ImgFallbackModule } from 'ngx-img-fallback';
     NewMessageComponent,
     SafeBase64ImgPipe,
     UserNamePipe,
-    Nl2BrPipe
+    Nl2BrPipe,
+    TreeComponent
   ],
   imports: [
     HomeRoutingModule,
@@ -44,6 +46,7 @@ import { ImgFallbackModule } from 'ngx-img-fallback';
     TypeaheadModule.forRoot(),
     ImgFallbackModule
   ],
+  entryComponents: [],
   providers   : [
     LogoutService,
     ConversationService,

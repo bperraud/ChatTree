@@ -52,7 +52,7 @@ export class WebSocketService {
   //      fav            : false,
   //      mute           : false,
   //      tags           : newThread.tags,
-  //      fatherThread   : newThread.fatherThread,
+  //      thread_parent   : newThread.thread_parent,
   //      lastMessageTime: newThread.creationDate
   //    },
   //    convId: newThread.convId

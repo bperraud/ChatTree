@@ -39,7 +39,7 @@ export class NewMessageComponent implements OnInit {
   ngOnInit() {}
 
   goToTreeView() {
-    this.router.navigate(['../..'], { relativeTo: this.route });
+    this.router.navigate(['../../overview'], { relativeTo: this.route });
   }
 
   handleSubmit($event) {

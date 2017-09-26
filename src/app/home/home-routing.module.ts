@@ -7,6 +7,7 @@ import { HomeComponent } from './home.component';
 import { HomeEmptyComponent } from './home-empty/home-empty.component';
 import { ConversationComponent } from './conversation/conversation.component';
 import { ThreadComponent } from './thread/thread.component';
+import { TreeComponent } from './tree/tree.component';
 import { InitWebSocketResolver } from './init-web-socket-resolver.service';
 
 const homeRoutes: Routes = [
@@ -34,6 +35,11 @@ const homeRoutes: Routes = [
             path     : 'thread/:id',
             component: ThreadComponent,
             data: { title: 'Fil d\'une conversation' }
+          },
+          {
+            path     : 'overview',
+            component: TreeComponent,
+            data: { title: 'Arbre d\'une conversation' }
           }
         ]
       }

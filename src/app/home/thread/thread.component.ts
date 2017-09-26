@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ThreadService } from '../_services/thread.service';
 import { Thread } from '../_models/thread';
@@ -15,7 +15,10 @@ import { Subscription } from 'rxjs/Subscription';
 
 import 'rxjs/add/observable/forkJoin';
 
+declare var Treant: any;
+
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector   : 'app-thread',
   templateUrl: './thread.component.html',
   styleUrls  : ['./thread.component.less'],
@@ -137,7 +140,7 @@ export class ThreadComponent implements OnInit, OnDestroy {
     $scope.thread = convParent.threads[$scope.threadId];
     var thread = $scope.thread;
 
-    if (thread.fatherThread === null)
+    if (thread.thread_parent === null)
       $scope.headerTitle = "Fil principal";
     else {
       $scope.headerTitle = thread.title === "" ? "Fil #" + $scope.threadId : thread.title;

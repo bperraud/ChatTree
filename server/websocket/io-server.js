@@ -85,7 +85,7 @@ function createConversation(newConv, user, socket) {
 
       // Update the root thread ref for the conversation
       await(client.query(
-        `UPDATE t_conversation set fk_root_thread = (${rootId})`
+        `UPDATE t_conversation SET fk_root_thread = ${rootId} WHERE id = ${convId}`
       ));
 
       // Insert the new conversation for users

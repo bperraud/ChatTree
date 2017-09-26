@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { WebSocketService } from '../_services/web-socket.service';
 import { AuthService } from '../../_services/auth.service';
 import { Http } from '@angular/http';
@@ -9,45 +9,12 @@ import { ConversationService } from '../_services/conversation.service';
 
 import 'rxjs/add/operator/switchMap';
 
-import { Treant } from 'treant-js';
-
 @Component({
   selector: 'app-conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.less']
 })
 export class ConversationComponent implements OnInit {
-
-  private tree_structure: any = {
-    chart: {
-      container: "#treant-id",
-      levelSeparation: 20,
-      siblingSeparation: 15,
-      subTeeSeparation: 15,
-      rootOrientation: "WEST",
-
-      node: {
-        HTMLclass: "treant-class",
-        drawLineThrough: true
-      },
-      connectors: {
-        type: "straight",
-        style: {
-          "stroke-width": 2,
-          "stroke": "#ccc"
-        }
-      }
-    },
-
-    nodeStructure: {
-      text: {
-        name: { val: "Djokovic, Novak", href: "http://www.atpworldtour.com/Tennis/Players/Top-Players/Novak-Djokovic.aspx" }
-      },
-      HTMLclass: "animal",
-      image: "/assets/images/users/default.jpg",
-      children: []
-    }
-  };
 
   conversation: Conversation;
   conversationSubscription: Subscription;
@@ -64,8 +31,6 @@ export class ConversationComponent implements OnInit {
   ngOnInit() {
     console.log("ConversationComponent INIT");
 
-    //(() => {Treant(this.tree_structure)})();
-
     this.route.paramMap
       .switchMap((params: ParamMap) =>
         this.convService.getConversation(+params.get('id')))
@@ -78,12 +43,10 @@ export class ConversationComponent implements OnInit {
       if (this.conversation.threads.length === 1) {
         this.router.navigate(['./thread', this.conversation.threads[0].id], { relativeTo: this.route });
       }
-      else this.buildConversationTree();
+      else {
+        this.router.navigate(['./overview'], { relativeTo: this.route });
+      }
     });
-  }
-
-  buildConversationTree() {
-
   }
 
 /*

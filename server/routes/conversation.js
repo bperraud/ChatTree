@@ -47,6 +47,7 @@ router.get('/get-conv/:id', auth.verifyToken, (req, res) => {
         t_conversation.id c_id,
         t_conversation.title c_title,
         t_conversation.picture c_picture,
+        t_conversation.fk_root_thread c_fk_root_thread,
         t_user.id u_id,
         t_user.login u_login,
         t_user.email u_email,

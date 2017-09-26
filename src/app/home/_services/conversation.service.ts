@@ -87,7 +87,15 @@ export class ConversationService {
     return this.http.get(`${this.base_url}/${this.get_conv_url}/${id}`, this.setHttpOptions())
       .map(ConversationService.extractData)
       .map(res => {
-        let conv = res.conversation;
+        // TODO: create an hydratation method
+        let conv = new Conversation(
+          res.conversation.id,
+          res.conversation.members,
+          res.conversation.threads,
+          res.conversation.fk_root_thread,
+          res.conversation.title,
+          res.conversation.picture
+        );
         console.log("in getConversation");
         console.log(conv);
         this.activeConversationSource.next(conv); // TODO: remove if useless
