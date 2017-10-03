@@ -197,7 +197,7 @@ export class LoginComponent implements OnInit {
 
         this.showSignupSuccess();
         setTimeout(() => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         }, 3000);
         return;
       }
