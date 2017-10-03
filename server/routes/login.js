@@ -49,13 +49,18 @@ router.post('/signup', (req, res) => {
       user.password = User.generateHash(reqUser.password);
       user.conversations = [];
 
-      db.query(SQL`INSERT INTO t_user(email, password) VALUES(${user.email}, ${user.password})`, (err) => {
+      db.query(
+        SQL`
+        INSERT INTO t_user(email, password) VALUES(${user.email}, ${user.password})
+        RETURNING id
+        `, (err, dbres) => {
         if (err) throw err;
 
         let token = jwt.sign(user, config.secret, {
           expiresIn: 60 * 60 * 24
         });
 
+        user.id = dbres.rows[0].id;
         req.session.user = user;
 
         return res.json(new Message(

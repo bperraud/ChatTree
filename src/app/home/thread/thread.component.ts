@@ -59,6 +59,18 @@ export class ThreadComponent implements OnInit, OnDestroy {
       let thread: Thread = this.threadService.activeThread;
 
       this.threadService.getThreadMessages(thread.id, thread.conversation)
+        .map((messages: Array<Message>) => {
+          if (this.threadService.activeThread.messages.length === 0) {
+            return messages;
+          }
+          // Only retrieve the last messages which aren't loaded yet
+          // TODO: implement a pagination process to retrieve messages
+          return messages.filter(msg =>
+            msg.id > this.threadService.activeThread.messages[
+            this.threadService.activeThread.messages.length - 1
+              ].id
+          );
+        })
         .subscribe((messages: Array<Message>) => {
           let thread: Thread = this.threadService.activeThread;
           this.threadService.addMessagesToActiveThread(messages);

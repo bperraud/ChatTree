@@ -20,7 +20,7 @@ const homeRoutes: Routes = [
     },
     children : [
       {
-        path     : '',
+        path     : 'home',
         component: HomeEmptyComponent
         //resolve  : {
         //  convIdToRedirect: DefaultConversationResolver

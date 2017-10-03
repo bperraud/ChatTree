@@ -157,7 +157,7 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
         return;
       }
 
@@ -197,7 +197,7 @@ export class LoginComponent implements OnInit {
 
         this.showSignupSuccess();
         setTimeout(() => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/home']);
         }, 3000);
         return;
       }

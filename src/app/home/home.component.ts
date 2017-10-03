@@ -8,8 +8,6 @@ import { ToastsManager } from 'ng2-toastr';
 import { fadeInRouteAnimation } from '../_animations/fade-in-out.animation';
 import { ToastService } from './_services/toast.service';
 
-import io from 'socket.io-client';
-
 @Component({
   selector   : 'app-home',
   templateUrl: './home.component.html',
@@ -42,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     if (!localStorage.getItem('isLoggedIn')) {
       // TODO: see if we need to keep this, since we are not supposed to reload the home component except on logout/login
-      this.showWelcomeHome();
+      // this.showWelcomeHome(); TODO: fix the toastr bug (ViewDestroyed)
       localStorage.setItem('isLoggedIn', 'true');
     }
 

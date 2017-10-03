@@ -50,6 +50,9 @@ export class NewMessageComponent implements OnInit {
 
     // Send the message
     if (!$event.shiftKey) {
+      // Don't send an empty message
+      if (this.message.content.replace(/(?:\r\n|\r|\n|\s)/g, '') === '')
+        return;
       this.sendMessage();
       return;
     }

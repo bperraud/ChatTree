@@ -21,8 +21,6 @@ function createMessage(newMsg, nsp, room) {
   console.log("createMessage");
   console.log(newMsg);
 
-  // TODO: Figure out the weeeeird bug of some messages not properly inserted :(
-
   // Insert the new message
   db.query(
     SQL`

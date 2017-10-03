@@ -39,6 +39,9 @@ export class ThreadService {
     if (Array.isArray(msgs))
       this.activeThread.messages.push(...msgs);
     else {
+      if (this.activeThread.messages.length !== 0 &&
+        this.activeThread.messages[this.activeThread.messages.length - 1].id >= msgs.id)
+        return;
       this.activeThread.messages.push(msgs);
       timeout = 0;
       if (msgs.author !== this.auth.getUser().id) {

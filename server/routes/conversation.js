@@ -86,6 +86,8 @@ router.get('/get-conv/:id', auth.verifyToken, (req, res) => {
         `
       ));
 
+      await(client.query('COMMIT'));
+
       let lastThreadId = null;
       let thread, tag;
 
