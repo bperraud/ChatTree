@@ -1,5 +1,86 @@
-<div #treeContainer class="tree-container">
-  <div id="tree"></div>
-</div>
+<!--<div #treeContainer class="tree-container">-->
+<!--<div id="tree"></div>-->
+<!--</div>-->
 
-<div #container></div>
+<!--<div #container></div>-->
+
+<!--<tree-root [nodes]="nodes">
+
+  <ng-template #treeNodeTemplate let-node let-index="index">
+    <span>{{ node.data.name }}</span>
+    <button (click)="go($event)">Custom Action</button>
+  </ng-template>
+
+</tree-root>-->
+
+<tree-root #tree [nodes]="nodes" [options]="options">
+  <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+    <div class="node-wrapper" [style.padding-left]="node.getNodePadding()">
+      <div class="node-content-wrapper"
+           [class.node-content-wrapper-root]="node.data.isRoot"
+           (contextmenu)="node.mouseAction('contextMenu', $event)">
+
+        <div class="thread-node">
+          <div [id]="'thread-'+node.data.id" class="thread-node-wrapper">
+            <span class="close" (click)="deleteThread(node.data.id)"><i class="fa fa-times"></i></span>
+            <span class="fav tool">
+        <i class="fa fa-star-o"></i>
+      </span>
+            <span class="mute tool">
+        <i class="fa fa-bell-slash-o is-mute"></i>
+      </span>
+            <span class="edit tool" (mousedown)="toggleEdition(node.data.id, !onTitleEdition[node.data.id])">
+        <i class="fa fa-pencil"></i>
+      </span>
+            <span class="new"></span>
+
+            <a class="main-link" (click)="goToThread(node.data.id)">
+              <div class="content-container">
+          <span *ngIf="!onTitleEdition[node.data.id]"
+                class="title"
+                [class.new-message]="node.data.newMessage"
+                [class.no-title]="!node.data.title"
+                (click)="toggleEdition(node.data.id)"
+          >{{titles[node.data.id] ? titles[node.data.id] : '&lt; Sans titre &gt;'}}
+            <span class="edit-hint"><i class="fa fa-pencil"></i></span>
+          </span>
+                <input type="text" class="edit-title"
+                       *ngIf="onTitleEdition[node.data.id]"
+                       placeholder="Nom du thread"
+                       [(ngModel)]="titles[node.data.id]"
+                       (change)="updateTitle(node.data.id, $event)"
+                       (blur)="updateTitle(node.data.id, $event)"
+                />
+                <p class="tags">
+            <span class="tag" (click)="searchByTag('a tag')">
+            TAG
+            </span>
+                </p>
+              </div>
+
+              <span class="time">{{node.data.date ? node.data.date : "Il y a quelques secondes"}}</span>
+            </a>
+
+            <div class="node-handle"
+                 *ngIf="node.hasChildren"
+                 (click)="node.mouseAction('expanderClick', $event);"
+                 [class.toggle-children-wrapper-expanded]="node.isExpanded"
+                 [class.toggle-children-wrapper-collapsed]="node.isCollapsed">
+              <i class="fa fa-caret-down"></i>
+            </div>
+          </div>
+
+          <div class="thread-more" (click)="newThread(node.data.id)">
+            <i class="fa fa-plus"></i>
+          </div>
+
+
+        </div>
+
+
+      </div>
+    </div>
+  </ng-template>
+
+</tree-root>
+

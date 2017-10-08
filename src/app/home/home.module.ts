@@ -20,6 +20,7 @@ import { Nl2BrPipe } from 'nl2br-pipe';
 import { NewMessageComponent } from './thread/new-message/new-message.component';
 import { LogoutService } from './_services/logout.service';
 import { ImgFallbackModule } from 'ngx-img-fallback';
+import TreeModule from 'angular-tree-component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ImgFallbackModule } from 'ngx-img-fallback';
     JsonpModule,
     ModalModule.forRoot(),
     TypeaheadModule.forRoot(),
-    ImgFallbackModule
+    ImgFallbackModule,
+    TreeModule
   ],
   entryComponents: [],
   providers   : [

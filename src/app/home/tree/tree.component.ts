@@ -1,5 +1,6 @@
-import { NgModule, Component, Compiler, ElementRef,
-  ViewChild, ViewContainerRef, ViewEncapsulation, OnInit
+import {
+  NgModule, Component, Compiler, ElementRef,
+  ViewChild, ViewContainerRef, ViewEncapsulation, OnInit, Renderer2, AfterViewChecked
 } from '@angular/core';
 
 import { AuthService } from '../../_services/auth.service';
@@ -12,6 +13,7 @@ import * as moment from 'moment';
 
 import { Thread } from '../_models/thread';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ITreeOptions, TREE_ACTIONS } from 'angular-tree-component';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -22,14 +24,33 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TreeComponent implements OnInit {
   @ViewChild('container', {read: ViewContainerRef}) container: ViewContainerRef;
   @ViewChild('treeContainer') treeContainer: ElementRef;
+  @ViewChild(TreeComponent)
+  private tree: TreeComponent;
+
 
   conversation: Conversation;
+  nodes: Array<Object>;
+  nodesMap: Object;
+  onTitleEdition: Object;
+  titles: Object;
+
+  options: ITreeOptions = {
+    allowDrag: false,
+    allowDrop: false,
+    animateExpand: true,
+    animateSpeed: 30,
+    animateAcceleration: 1.2,
+  };
 
   constructor(private auth: AuthService,
               private route: ActivatedRoute,
               private router: Router,
               private convService: ConversationService,
-              private compiler: Compiler) {
+              private compiler: Compiler
+  ) {
+    this.nodesMap = {};
+    this.onTitleEdition = {};
+    this.titles = {};
   }
 
   ngOnInit() {
@@ -195,196 +216,89 @@ export class TreeComponent implements OnInit {
     return result;*/
   }
 
-  /**
-   * Find the root thread of a conversation
-   * @param conversation
-   * @returns {int} The root thread index
-   */
-  private static getRootIndex(conversation) {
-    for (let i = 0; i < conversation.threads.length; i++) {
-      if (conversation.root === conversation.threads[i].id) {
-        return i;
-      }
-    }
-
-    throw Error('Root thread id not found for the conversation');
-  }
-
-  buildNodes(threads) {
-    let nodes = [];
-    // Generate HTML
-    for (let i = 0; i < threads.length; i++) {
-      let thread = threads[i];
-      nodes.push({
-        id: thread.id,
-        innerHTML: this.nodeHTML(thread),
-        children: [],
-        thread_parent: thread.thread_parent
-      });
-    }
-
-    // Find root
-    let tree   = [];
-    let rootId = TreeComponent.getRootIndex(this.conversation);
-
-    tree.push(nodes[rootId]);
-    nodes.splice(rootId, 1);
-
-    // Build tree top->bottom by copying father in every child
-    for (let i = 0; i < nodes.length; i++) {
-      let parentIndexInTree = TreeComponent.getFatherIndexInTree(nodes[i], tree);
-      if (parentIndexInTree !== -1) {
-        nodes[i].parent = tree[parentIndexInTree];
-        tree.push(nodes[i]);
-      }
-    }
-
-    // Clean useless fields
-    for (let i = 0; i < tree.length; i++) {
-      delete tree[i].children;
-      delete tree[i].thread_parent;
-    }
-
-    return tree;
-  }
-
-  static getFatherIndexInTree(node, tree) {
-    let fatherId = node.thread_parent;
-    for (let i = 0; i < tree.length; i++) {
-      if (tree[i].id === fatherId) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-    onTreeLoaded() {
-      console.log("onTreeLoaded");
-    }
-
-    buildConversationTree() {
-    console.log("buildConversationTree");
-
-    const config = {
-      container: '#tree',
-      connectors: {
-        type: 'step'
-      },
-      node: {
-        HTMLclass: 'thread-node',
-        collapsable: true
-      },
-      levelSeparation: 45
+  buildNodes(parent: Thread) {
+    this.nodesMap[parent.id] = {
+      id: parent.id,
+      title: parent.title,
+      isRoot: parent.thread_parent === null,
+      isExpanded: true,
+      children: []
     };
 
-    let treeConfig = this.buildNodes(this.conversation.threads);
-    treeConfig.unshift(config);
-    const tree = new Treant(treeConfig, this.onTreeLoaded, $);
+    this.conversation.threads.filter(
+      thread => thread.thread_parent === parent.id
+    ).forEach(thread => {
+      this.nodesMap[parent.id].children.push(this.buildNodes(thread));
+    });
 
-    this.addComponent(
-      this.treeContainer.nativeElement.outerHTML,
-      {},
-      this.conversation.threads,
-      this.route,
-      this.router
-    );
-
-    $(this.treeContainer.nativeElement).remove();
+    return this.nodesMap[parent.id];
   }
 
-  private addComponent(template: string, properties: any = {}, threads: Thread[], route: ActivatedRoute, router: Router) {
+  buildConversationTree() {
+    console.log("buildConversationTree");
 
-    @Component({template})
-    class TemplateComponent implements OnInit {
-      titles: Object             = {};
-      onTitleEdition: Object     = {}; // booleans, true if thread title is being modified
-
-      ngOnInit(): void {
-        // Add all needed model bindings
-        threads.forEach(thread => {
-          this.onTitleEdition[thread.id] = false;
-          this.titles[thread.id] = thread.title;
-        });
+    this.conversation.threads.forEach(
+      thread => {
+        this.onTitleEdition[thread.id] = false;
+        this.titles[thread.id] = thread.title;
       }
+    );
 
-      updateTitleWithPenTool(threadId, $event) {
-        console.log("updateTitleWithPenTool");
-        if ($event.button !== 0) return; // Track only left click
-        this.updateTitle(threadId, $event);
-      }
+    this.nodes = [];
+    // Find root thread
+    const rootThread = this.conversation.threads.find(t => t.thread_parent === null);
+    this.nodes.push(this.buildNodes(rootThread));
+  }
 
-      toggleEdition(threadId, enable) {
-        console.log("toggleEdition");
+  toggleEdition(threadId, enable = true) {
+    console.log("toggleEdition");
 
-        this.onTitleEdition[threadId] = enable;
+    this.onTitleEdition[threadId] = enable;
 
-        // Enable title edition
-        if (this.onTitleEdition[threadId]) {
-          setTimeout(() => {
-            $(`#thread-${threadId}`).find("input").focus();
-          });
-        }
-        // Validate changes
-        else {
-          //TODO: server call
-        }
-      }
+    console.log(this.conversation);
+    console.log(threadId);
 
-      updateTitle(threadId, $event) {
-        console.log("updateTitle");
+    // Enable title edition
+    if (this.onTitleEdition[threadId]) {
 
-        // Timeout to prevent event handlers collisions
-        setTimeout(() => {
-          // From the pen tool
-          if ($event.type === "mousedown") {
-            this.toggleEdition(threadId, !this.onTitleEdition[threadId]);
-            return;
-          }
+      // setTimeout because we need to wait for the ngIf to render the input elem
+      setTimeout(() => {
+        $(`#thread-${threadId}`).find("input").focus();
+      });
 
-          let $input = $(`#thread-${threadId}`).find("input");
+    }
+    // Validate changes
+    else if (
+      this.titles[threadId] !== this.conversation.threads.find(
+        t => t.id === threadId
+      ).title) {
+      console.log("TODO: server call");
+      //TODO: server call
+    }
+  }
 
-          if ($event.type === "blur" || ($event.type === "keyup" && $event.keyCode === 13)) {
-            this.titles[threadId] = $input.val();
-            this.toggleEdition(threadId, false);
-          }
-          else if ($event.type === "keyup" && $event.keyCode === 27) {
-            $input.val(this.titles[threadId]);
-            this.toggleEdition(threadId, false);
-          }
-        });
-      }
+  goToThread(threadId) {
+    console.log("goToThread");
 
-      newThread(threadId) {
-        console.log("newThread");
-
-        // TODO: server call
-      }
-
-      goToThread(threadId) {
-        console.log("goToThread");
-
-        // Don't redirect if the title is being modified, instead place focus on input
-        if (this.onTitleEdition[threadId]) {
-          $(`#thread-${threadId}`).find("input").focus();
-          return;
-        }
-
-        router.navigate(['../thread/', threadId], { relativeTo: route });
-      }
+    // Don't redirect if the title is being modified, instead place focus on input
+    if (this.onTitleEdition[threadId]) {
+      $(`#thread-${threadId}`).find("input").focus();
+      return;
     }
 
-    @NgModule({declarations: [TemplateComponent]})
-    class TemplateModule {}
-
-    const module    = this.compiler.compileModuleAndAllComponentsSync(TemplateModule);
-    const factory   = module.componentFactories.find(componentFactory =>
-      componentFactory.componentType === TemplateComponent
-    );
-    const component = this.container.createComponent(factory);
-    Object.assign(component.instance, properties);
-    // If properties are changed at a later stage, the change detection
-    // may need to be triggered manually:
-    // component.changeDetectorRef.detectChanges();
+    this.router.navigate(['../thread/', threadId], {relativeTo: this.route});
   }
 
+  updateTitle(threadId, $event) {
+    console.log("updateTitle");
+    console.log(this.titles[threadId]);
+
+    this.toggleEdition(threadId, false);
+  }
+
+  newThread(threadId) {
+    console.log("newThread");
+
+    // TODO: server call
+  }
 }

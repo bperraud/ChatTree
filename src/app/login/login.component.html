@@ -118,6 +118,7 @@
                                (keyup)="$event.keyCode !== 13 ? login_form.emailChanged = true : null"
                                required
                                #identifiant="ngModel"
+                               autofocus
                         />
                         <span><i class="fa fa-envelope-o"></i></span>
                         <div [hidden]="login_form.emailErrorMessage === '' || login_form.emailChanged"
