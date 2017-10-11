@@ -6,6 +6,7 @@ export class Thread {
   message_parent: number;
   thread_parent: number;
   conversation: number;
+  author: number;
   title: string;
   tags: Array<string>;
   messages: Array<Message>;

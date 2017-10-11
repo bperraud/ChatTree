@@ -26,7 +26,12 @@ export class ConversationComponent implements OnInit {
     private auth: AuthService,
     private ws: WebSocketService,
     private convService: ConversationService
-  ) { }
+  ) {
+    this.ws.thread$.subscribe(
+      thread => {
+        convService.addThreadToConversation(thread);
+      });
+  }
 
   ngOnInit() {
     console.log("ConversationComponent INIT");

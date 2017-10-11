@@ -42,6 +42,7 @@ export class NewMessageComponent implements OnInit {
     this.router.navigate(['../../overview'], { relativeTo: this.route });
   }
 
+  // TODO: handle the submit by clicking on the triangle button
   handleSubmit($event) {
     if ($event.keyCode !== 13) return;
 

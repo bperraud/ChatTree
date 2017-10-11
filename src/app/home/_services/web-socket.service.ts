@@ -9,6 +9,7 @@ import { Message } from '../_models/message';
 import { Conversation } from '../_models/conversation';
 
 import io from 'socket.io-client';
+import { Thread } from '../_models/thread';
 
 @Injectable()
 export class WebSocketService {
@@ -17,11 +18,13 @@ export class WebSocketService {
 
   // Observable sources
   private messageSource        = new Subject<Message>();
+  private threadSource         = new Subject<Thread>();
   private conversationSource   = new Subject<Conversation>();
   private conversationOKSource = new Subject<Conversation>();
 
   // Observable streams
   message$        = this.messageSource.asObservable();
+  thread$         = this.threadSource.asObservable();
   conversation$   = this.conversationSource.asObservable();
   conversationOK$ = this.conversationOKSource.asObservable();
 
@@ -40,25 +43,6 @@ export class WebSocketService {
   // WS NOTIFICATION HANDLERS
   //-------------------------
 
-  //onNewThread(data) {
-  //  console.log("onNewThread (other)");
-  //  var newThread = data.content;
-  //  console.log(newThread);
-  //
-  //  $rootScope.$broadcast('newThread', {
-  //    thread: {
-  //      _id            : newThread._id,
-  //      title          : newThread.title,
-  //      fav            : false,
-  //      mute           : false,
-  //      tags           : newThread.tags,
-  //      thread_parent   : newThread.thread_parent,
-  //      lastMessageTime: newThread.creationDate
-  //    },
-  //    convId: newThread.convId
-  //  });
-  //}
-
   /**
    * For both messages of others and mine
    *
@@ -66,6 +50,15 @@ export class WebSocketService {
    */
   onNewMessage(msg: Message) {
     this.messageSource.next(msg);
+  }
+
+  /**
+   * For both threads of others and mine
+   *
+   * @param {Thread} thread
+   */
+  onNewThread(thread: Thread) {
+    this.threadSource.next(thread);
   }
 
   onNewConversation(conv: Conversation) {
@@ -181,12 +174,18 @@ export class WebSocketService {
       $this.onNewMessage(data.message);
     };
 
+    let onCreateThread = function (data) {
+      console.log("onCreateThread");
+      $this.onNewThread(data.thread);
+    };
+
     // Event bindings
     this.activeConvSocket.on('connect', onConnection);
     this.activeConvSocket.on('disconnect', onDisconnection);
     this.activeConvSocket.on('connect_error', onConnectError);
     this.activeConvSocket.on('error', onError);
     this.activeConvSocket.on('create-message', onCreateMessage);
+    this.activeConvSocket.on('create-thread', onCreateThread);
   }
 
   joinThreadRoom(threadId: Number) {
@@ -196,6 +195,11 @@ export class WebSocketService {
   createMessage(message: Message) {
     let id = WebSocketService.generateUuid();
     this.activeConvSocket.emit('create-message', { message, id });
+  }
+
+  createThread(thread: Thread) {
+    let id = WebSocketService.generateUuid();
+    this.activeConvSocket.emit('create-thread', { thread, id });
   }
 
   createConversation(conv: Conversation) {

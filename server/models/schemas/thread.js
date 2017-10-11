@@ -1,6 +1,6 @@
-const atts     = ['id', 'creation_date', 'fk_message_parent', 'fk_thread_parent', 'fk_conversation', 'title'];
+const atts     = ['id', 'creation_date', 'fk_message_parent', 'fk_thread_parent', 'fk_conversation', 'fk_author', 'title'];
 const aug_atts = ['tags'];
-const alt_atts = ['date', 'message_parent', 'thread_parent', 'conversation'];
+const alt_atts = ['date', 'message_parent', 'thread_parent', 'conversation', 'author'];
 const prefix   = 't_';
 
 class Thread {
@@ -12,7 +12,8 @@ class Thread {
     this.fk_message_parent = null;
     this.fk_thread_parent  = null;
     this.fk_conversation   = null;
-    this.title             = null;
+    this.fk_conversation   = null;
+    this.fk_author         = null;
 
     // Augmented atts
     this.tags = [];

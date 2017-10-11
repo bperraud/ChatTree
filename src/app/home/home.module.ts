@@ -20,7 +20,7 @@ import { Nl2BrPipe } from 'nl2br-pipe';
 import { NewMessageComponent } from './thread/new-message/new-message.component';
 import { LogoutService } from './_services/logout.service';
 import { ImgFallbackModule } from 'ngx-img-fallback';
-import TreeModule from 'angular-tree-component';
+import { TreeModule } from 'angular-tree-component';
 
 @NgModule({
   declarations: [
@@ -49,10 +49,11 @@ import TreeModule from 'angular-tree-component';
     TreeModule
   ],
   entryComponents: [],
-  providers   : [
+  providers: [
     LogoutService,
     ConversationService,
     ThreadService
   ]
 })
-export class HomeModule {}
+export class HomeModule {
+}

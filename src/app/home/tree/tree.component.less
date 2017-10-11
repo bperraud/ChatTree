@@ -323,8 +323,8 @@ tree-viewport {
 .node-content-wrapper::before {
   border-bottom: 4px solid #636363;
   border-left: 4px solid #636363;
-  height: 240px;
-  top: -180px;
+  height: 1000px; // TODO: fix the ugly subterfuge somehow...
+  top: -940px;
   width: 40px;
   left: -40px;
   z-index: -1;
@@ -336,12 +336,20 @@ tree-viewport {
 
 .tree-children::after {
   border-left: 4px solid #636363;
-  height: 100%;
-  top: -80px;
-  left: -55px;
+  height: calc(~'100% - 80px');
+  top: 0;
+  left: 40px;
 }
 
-treenode:last-child > .tree-node > .tree-children::after {
+// TODO: see if we can solve the conflit between horizontal scrolling and connectors
+//.tree-children {
+//  overflow: visible!important;
+//  &::before, &::after {
+//    overflow: hidden;
+//  }
+//}
+
+tree-node:last-child .tree-node .tree-children::after {
   border-left: none;
 }
 

@@ -8,6 +8,7 @@ import { Http, RequestOptions, Response, Headers } from '@angular/http';
 
 import 'rxjs/add/observable/throw';
 import "rxjs/add/operator/catch";
+import { Thread } from '../_models/thread';
 
 @Injectable()
 export class ConversationService {
@@ -24,10 +25,12 @@ export class ConversationService {
   private conversationsSource      = new Subject<Array<Conversation>>();
   private newConversationSource    = new Subject<boolean>();
   private activeConversationSource = new Subject<Conversation>();
+  private newThreadSource          = new Subject<Thread>();
 
   // Observable streams
   conversations$      = this.conversationsSource.asObservable();
   newConversation$    = this.newConversationSource.asObservable();
+  newThread$          = this.newThreadSource.asObservable();
   activeConversation$ = this.activeConversationSource.asObservable();
 
   private setHttpOptions(headers?: Headers) {
@@ -50,7 +53,6 @@ export class ConversationService {
       .catch(ConversationService.handleError);
   }
 
-  // Service message commands
   setConversations(convs: Array<Conversation>) {
     convs = convs.map(conv => {
       if (conv.picture === null)
@@ -104,6 +106,14 @@ export class ConversationService {
         return conv;
       })
       .catch(ConversationService.handleError);
+  }
+
+  addThreadToConversation(thread: Thread) {
+    console.log("addThreadToConversation");
+    console.log(thread);
+    this.activeConversation.threads.push(thread);
+    this.activeConversationSource.next(this.activeConversation);
+    this.newThreadSource.next(thread);
   }
 
   /*  private getConvLocal(id: number): Conversation {
