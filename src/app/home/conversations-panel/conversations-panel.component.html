@@ -23,7 +23,7 @@
             <div class="title" *ngIf="conv.title">{{conv.title}}</div>
             <div class="members">
                 <span
-                  *ngFor="let m of conv.members; last as isLast"
+                  *ngFor="let m of conv.members | excludeSelfUser; last as isLast"
                   class="member"
                   [ngClass]="{last: isLast}"
                 >{{m | userName}}</span>

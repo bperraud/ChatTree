@@ -53,7 +53,7 @@ router.get('/get-conversations', auth.verifyToken, (req, res) => {
     FROM t_conversation
     INNER JOIN t_conversation_user ON t_conversation.id = t_conversation_user.fk_conversation
     INNER JOIN t_user ON t_user.id = t_conversation_user.fk_member
-    WHERE t_conversation.id = ANY (${convIds}) AND t_user.id <> ${user.id}
+    WHERE t_conversation.id = ANY (${convIds})
     `, (err, dbres) => {
       if (err) throw err;
 

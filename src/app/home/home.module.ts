@@ -21,6 +21,7 @@ import { NewMessageComponent } from './thread/new-message/new-message.component'
 import { LogoutService } from './_services/logout.service';
 import { ImgFallbackModule } from 'ngx-img-fallback';
 import { TreeModule } from 'angular-tree-component';
+import { ExcludeSelfUserPipe } from './_pipes/exclude-self-user.pipe';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { TreeModule } from 'angular-tree-component';
     SafeBase64ImgPipe,
     UserNamePipe,
     Nl2BrPipe,
-    TreeComponent
+    TreeComponent,
+    ExcludeSelfUserPipe
   ],
   imports: [
     HomeRoutingModule,

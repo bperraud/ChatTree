@@ -38,7 +38,7 @@ let session;
  socket.to('game').emit('message', 'enjoy the game');
 
  // sending to all clients in namespace 'myNamespace', include sender
- io.of('myNamespace').emit('message', 'gg');
+0
 
  // sending to individual socketid
  socket.broadcast.to(socketid).emit('message', 'for your eyes only');
@@ -103,7 +103,7 @@ function createConversation(newConv, user, socket) {
         SQL`
           SELECT id u_id, login u_login, email u_email, firstname u_firstname, lastname u_lastname, profile_picture u_pp
           FROM  t_user
-          WHERE id = ANY (${newConv.members.filter(id => id !== user.id)})
+          WHERE id = ANY (${newConv.members})
           `
       ));
 

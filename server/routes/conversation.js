@@ -57,7 +57,7 @@ router.get('/get-conv/:id', auth.verifyToken, (req, res) => {
         FROM t_conversation
         INNER JOIN t_conversation_user ON t_conversation.id = t_conversation_user.fk_conversation
         INNER JOIN t_user ON t_user.id = t_conversation_user.fk_member
-        WHERE t_conversation.id = ${convId} AND t_user.id <> ${user.id}
+        WHERE t_conversation.id = ${convId}
         `
       ));
 
