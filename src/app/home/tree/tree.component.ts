@@ -15,6 +15,7 @@ import { TreeComponent as AngularTreeComponent } from 'angular-tree-component';
 import { WebSocketService } from '../_services/web-socket.service';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '../../_services/auth.service';
+import { ToastService } from '../_services/toast.service';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -48,7 +49,9 @@ export class TreeComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private router: Router,
               private convService: ConversationService,
-              private ws: WebSocketService) {
+              private ws: WebSocketService,
+              private toastService: ToastService
+  ) {
     this.nodesMap              = {};
     this.onTitleEdition        = {};
     this.titles                = {};
@@ -168,7 +171,6 @@ export class TreeComponent implements OnInit, OnDestroy {
     this.ws.createThread(newThread);
   }
 
-  // TODO: add notification/toast if the thread is from someone else
   addThreadNode(thread: Thread) {
     this.nodesMap[thread.thread_parent].children.push({
       id: thread.id,
@@ -185,6 +187,11 @@ export class TreeComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         $(`#thread-${thread.id}`).find("input").focus();
       });
+      this.toastService.showSuccess('Fil créé ;-)');
+    } else {
+      this.toastService.showCustom('Un fil vient d\'être créé !');
+      // TODO: add info of WHO created the thread
+      // using probably a service with a formatting method (with mail/pseudo, etc.)
     }
   }
 }
