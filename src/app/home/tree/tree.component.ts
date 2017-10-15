@@ -16,6 +16,7 @@ import { WebSocketService } from '../_services/web-socket.service';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '../../_services/auth.service';
 import { ToastService } from '../_services/toast.service';
+import { UserNamePipe } from '../_pipes/user-name.pipe';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -50,7 +51,8 @@ export class TreeComponent implements OnInit, OnDestroy {
               private router: Router,
               private convService: ConversationService,
               private ws: WebSocketService,
-              private toastService: ToastService
+              private toastService: ToastService,
+              private userPipe: UserNamePipe
   ) {
     this.nodesMap              = {};
     this.onTitleEdition        = {};
@@ -172,14 +174,18 @@ export class TreeComponent implements OnInit, OnDestroy {
   }
 
   addThreadNode(thread: Thread) {
-    this.nodesMap[thread.thread_parent].children.push({
+    this.nodesMap[thread.id] = {
       id: thread.id,
       title: thread.title,
       isRoot: false,
       isExpanded: false,
       children: []
-    });
+    };
+    this.nodesMap[thread.thread_parent].children.push(this.nodesMap[thread.id]);
     this.tree.treeModel.update();
+    // TODO: see if we keep this bhv or if we suggest the creation of a thread by highlighting the
+    // father for instance
+    this.tree.treeModel.getNodeById(thread.thread_parent).expand();
 
     if (thread.author === this.auth.getUser().id) {
       this.onTitleEdition[thread.id] = true;
@@ -189,9 +195,11 @@ export class TreeComponent implements OnInit, OnDestroy {
       });
       this.toastService.showSuccess('Fil créé ;-)');
     } else {
-      this.toastService.showCustom('Un fil vient d\'être créé !');
-      // TODO: add info of WHO created the thread
-      // using probably a service with a formatting method (with mail/pseudo, etc.)
+      this.toastService.showCustom(
+        `Un fil vient d'être créé par 
+        ${this.userPipe.transform(this.conversation.members.find(m => m.id === thread.author))}
+        !`
+      );
     }
   }
 }

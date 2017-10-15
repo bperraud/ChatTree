@@ -52,7 +52,8 @@ import { TreeModule } from 'angular-tree-component';
   providers: [
     LogoutService,
     ConversationService,
-    ThreadService
+    ThreadService,
+    UserNamePipe
   ]
 })
 export class HomeModule {

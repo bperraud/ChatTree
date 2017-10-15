@@ -210,7 +210,7 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
           this.toastService.showSuccess('Conversation créée !');
         }
 
-        // TODO: find out how to notifiy for a new conversation created by others
+        // TODO: find out how to notify for a new conversation created by others
       });
   }
 
