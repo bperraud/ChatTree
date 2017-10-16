@@ -9,26 +9,33 @@
           <div [id]="'thread-'+node.data.id" class="thread-node-wrapper">
             <span class="close" (click)="deleteThread(node.data.id)"><i class="fa fa-times"></i></span>
             <span class="fav tool">
-        <i class="fa fa-star-o"></i>
-      </span>
+              <i class="fa fa-star-o"></i>
+            </span>
             <span class="mute tool">
-        <i class="fa fa-bell-slash-o is-mute"></i>
-      </span>
-            <span class="edit tool" (mousedown)="toggleEdition(node.data.id, !onTitleEdition[node.data.id])">
-        <i class="fa fa-pencil"></i>
-      </span>
+              <i class="fa fa-bell-slash-o is-mute"></i>
+            </span>
+            <span class="edit tool"
+                  (mousedown)="toggleEdition(node.data.id, !onTitleEdition[node.data.id])"
+                  *ngIf="!node.data.isRoot"
+            >
+              <i class="fa fa-pencil"></i>
+            </span>
             <span class="new"></span>
 
             <a class="main-link" (click)="goToThread(node.data.id)">
               <div class="content-container">
-          <span *ngIf="!onTitleEdition[node.data.id]"
-                class="title"
-                [class.new-message]="node.data.newMessage"
-                [class.no-title]="!node.data.title"
-                (click)="toggleEdition(node.data.id)"
-          >{{titles[node.data.id] ? titles[node.data.id] : '&lt; Sans titre &gt;'}}
-            <span class="edit-hint"><i class="fa fa-pencil"></i></span>
-          </span>
+                <span *ngIf="!onTitleEdition[node.data.id]"
+                      class="title"
+                      [class.new-message]="node.data.newMessage"
+                      [class.no-title]="!node.data.title"
+                      [class.no-editable]="node.data.isRoot"
+                      (click)="toggleEdition(node.data.id)"
+                >{{
+                  node.data.isRoot ? 'Fil principal' :
+                  (titles[node.data.id] ? titles[node.data.id] : '&lt; Sans titre &gt;')
+                  }}
+                  <span *ngIf="!node.data.isRoot" class="edit-hint"><i class="fa fa-pencil"></i></span>
+                </span>
                 <input type="text" class="edit-title"
                        *ngIf="onTitleEdition[node.data.id]"
                        placeholder="Nom du thread"

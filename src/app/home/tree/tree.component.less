@@ -80,13 +80,16 @@ tree-viewport {
       font-weight: bold;
       text-align: center;
       margin-bottom: 10px;
-      cursor: text;
+
+      &:not(.no-editable) {
+        cursor: text;
+      }
 
       &.new-message {
         // color: @main-color;
       }
 
-      &.no-title {
+      &.no-title:not(.no-editable) {
         font-style: italic;
       }
 

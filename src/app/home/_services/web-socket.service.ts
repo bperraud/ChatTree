@@ -19,12 +19,14 @@ export class WebSocketService {
   // Observable sources
   private messageSource        = new Subject<Message>();
   private threadSource         = new Subject<Thread>();
+  private threadUpdatedSource  = new Subject<Thread>();
   private conversationSource   = new Subject<Conversation>();
   private conversationOKSource = new Subject<Conversation>();
 
   // Observable streams
   message$        = this.messageSource.asObservable();
   thread$         = this.threadSource.asObservable();
+  threadUpdated$  = this.threadUpdatedSource.asObservable();
   conversation$   = this.conversationSource.asObservable();
   conversationOK$ = this.conversationOKSource.asObservable();
 
@@ -69,20 +71,9 @@ export class WebSocketService {
     this.conversationOKSource.next(conv);
   }
 
-  //onUpdateThread(data) {
-  //  console.log("onUpdateThread (other)");
-  //  var updatedThread = data.content;
-  //  console.log(updatedThread);
-  //
-  //  $rootScope.$broadcast('updateThread', {
-  //    thread: {
-  //      _id  : updatedThread._id,
-  //      title: updatedThread.title,
-  //      tags : updatedThread.tags
-  //    },
-  //    convId: updatedThread.convId
-  //  });
-  //}
+  onEditThread(thread: Thread) {
+    this.threadUpdatedSource.next(thread);
+  }
 
   private static generateUuid() {
     return UUID.UUID();
@@ -179,6 +170,11 @@ export class WebSocketService {
       $this.onNewThread(data.thread);
     };
 
+    let onEditThread = function (data) {
+      console.log("onEditThread");
+      $this.onEditThread(data.thread);
+    };
+
     // Event bindings
     this.activeConvSocket.on('connect', onConnection);
     this.activeConvSocket.on('disconnect', onDisconnection);
@@ -186,6 +182,7 @@ export class WebSocketService {
     this.activeConvSocket.on('error', onError);
     this.activeConvSocket.on('create-message', onCreateMessage);
     this.activeConvSocket.on('create-thread', onCreateThread);
+    this.activeConvSocket.on('edit-thread', onEditThread);
   }
 
   joinThreadRoom(threadId: Number) {
@@ -200,6 +197,16 @@ export class WebSocketService {
   createThread(thread: Thread) {
     let id = WebSocketService.generateUuid();
     this.activeConvSocket.emit('create-thread', { thread, id });
+  }
+
+  /**
+   * Only for title
+   *
+   * @param {Thread} thread
+   */
+  editThread(thread: Thread) {
+    let id = WebSocketService.generateUuid();
+    this.activeConvSocket.emit('edit-thread', { thread, id });
   }
 
   createConversation(conv: Conversation) {

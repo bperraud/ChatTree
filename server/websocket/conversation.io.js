@@ -95,6 +95,31 @@ function createThread(newThread, nsp) {
 
 /**
  *
+ * @param thread {Thread}
+ * @param nsp {SocketIO.Namespace}
+ */
+function editThread(thread, nsp) {
+  console.log("editThread");
+  console.log(thread);
+
+  // Edit the thread (only the title for the moment)
+  db.query(
+    SQL` UPDATE t_thread SET title = ${thread.title} WHERE id = ${thread.id} `,
+    (err, dbres) => {
+      if (err) throw err;
+
+      if (dbres.rowCount < 1) {
+        // TODO: send an error to the client (update failed: thread doesn't exist)
+      }
+
+      // Broadcast to all members of the conversation
+      nsp.emit('edit-thread', {thread: thread});
+    });
+
+}
+
+/**
+ *
  * @param newMsg {Message}
  * @param nsp {SocketIO.Namespace}
  * @param room {String}
@@ -206,6 +231,21 @@ module.exports = {
             });
 
         createThread(newThread, nsp);
+      });
+
+      socket.on('edit-thread', (data) => {
+        console.log('edit-thread ws');
+        console.log(data.thread);
+
+        let user   = socket.handshake.session.user,
+            thread = new Thread({
+              author: user.id,
+              id: data.thread.id,
+              title: data.thread.title,
+              tags: data.thread.tags
+            });
+
+        editThread(thread, nsp);
       });
     });
 

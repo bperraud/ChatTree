@@ -45,6 +45,7 @@ export class TreeComponent implements OnInit, OnDestroy {
   };
 
   newThreadSubscription: Subscription;
+  threadEditedSubscription: Subscription;
 
   constructor(private auth: AuthService,
               private route: ActivatedRoute,
@@ -60,6 +61,10 @@ export class TreeComponent implements OnInit, OnDestroy {
     this.newThreadSubscription = this.convService.newThread$.subscribe(
       thread => {
         this.addThreadNode(thread);
+      });
+    this.threadEditedSubscription = this.convService.threadEdited$.subscribe(
+      thread => {
+        this.editThreadNode(thread);
       });
   }
 
@@ -115,10 +120,12 @@ export class TreeComponent implements OnInit, OnDestroy {
   toggleEdition(threadId, enable = true) {
     console.log("toggleEdition");
 
-    this.onTitleEdition[threadId] = enable;
+    if (this.nodesMap[threadId].isRoot) {
+      console.log("Can't edit the root thread!");
+      return false;
+    }
 
-    console.log(this.conversation);
-    console.log(threadId);
+    this.onTitleEdition[threadId] = enable;
 
     // Enable title edition
     if (this.onTitleEdition[threadId]) {
@@ -130,12 +137,12 @@ export class TreeComponent implements OnInit, OnDestroy {
 
     }
     // Validate changes
-    else if (
-      this.titles[threadId] !== this.conversation.threads.find(
-        t => t.id === threadId
-      ).title) {
-      console.log("TODO: server call");
-      //TODO: server call
+    else {
+      const thread = this.conversation.threads.find(t => t.id === threadId);
+      if (this.titles[threadId] !== thread.title) {
+        thread.title = this.titles[threadId];
+        this.ws.editThread(thread);
+      }
     }
   }
 
@@ -201,5 +208,12 @@ export class TreeComponent implements OnInit, OnDestroy {
         !`
       );
     }
+  }
+
+  editThreadNode(thread: Thread) {
+    // TODO: make tests while someone is editing a title and another has just updated it
+    this.nodesMap[thread.id].title = thread.title;
+    this.titles[thread.id] = thread.title;
+    this.tree.treeModel.update();
   }
 }

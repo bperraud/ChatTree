@@ -26,11 +26,13 @@ export class ConversationService {
   private newConversationSource    = new Subject<boolean>();
   private activeConversationSource = new Subject<Conversation>();
   private newThreadSource          = new Subject<Thread>();
+  private threadEditedSource       = new Subject<Thread>();
 
   // Observable streams
   conversations$      = this.conversationsSource.asObservable();
   newConversation$    = this.newConversationSource.asObservable();
   newThread$          = this.newThreadSource.asObservable();
+  threadEdited$       = this.threadEditedSource.asObservable();
   activeConversation$ = this.activeConversationSource.asObservable();
 
   private setHttpOptions(headers?: Headers) {
@@ -114,6 +116,15 @@ export class ConversationService {
     this.activeConversation.threads.push(thread);
     this.activeConversationSource.next(this.activeConversation);
     this.newThreadSource.next(thread);
+  }
+
+  updateThreadOfConversation(thread: Thread) {
+    console.log("updateThreadOfConversation");
+    console.log(thread);
+    let threadToUpdate   = this.activeConversation.threads.find(t => t.id === thread.id);
+    threadToUpdate.title = thread.title;
+    this.activeConversationSource.next(this.activeConversation);
+    this.threadEditedSource.next(thread);
   }
 
   /*  private getConvLocal(id: number): Conversation {

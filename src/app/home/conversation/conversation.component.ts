@@ -31,6 +31,10 @@ export class ConversationComponent implements OnInit {
       thread => {
         convService.addThreadToConversation(thread);
       });
+    this.ws.threadUpdated$.subscribe(
+      thread => {
+        convService.updateThreadOfConversation(thread);
+      });
   }
 
   ngOnInit() {
