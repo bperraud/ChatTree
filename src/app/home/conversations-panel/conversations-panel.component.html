@@ -1,7 +1,6 @@
 <div id="conversations-panel">
   <div class="options">
-    <!--<input type="text" placeholder="Rechercher" ng-model="searchAmongConversations" />-->
-    <input type="search" placeholder="Rechercher"/>
+    <input type="search" placeholder="Rechercher" [(ngModel)]="convSearch"/>
     <button class="new-conversation" (click)="openNewConversationModal(modalTemplate)">
       <i class="fa fa-comment-o"></i>
     </button>
@@ -9,9 +8,8 @@
 
   <div class="conversations" #conversationContainer>
     <div class="conversations-wrapper">
-      <!--<div class="conversation fade-item" ng-repeat="c in conversationsArray | reverseArray | filterAmongConversations:searchAmongConversations" ng-class="convActiveClass('{{c._id}}')">-->
       <a
-        *ngFor="let conv of conversations"
+        *ngFor="let conv of conversations | conversationFilter:convSearch"
         routerLink="/conversation/{{conv.id}}"
         routerLinkActive="active"
         [@fadeInOut]="'*'"

@@ -53,7 +53,7 @@ export class TreeComponent implements OnInit, OnDestroy {
               private convService: ConversationService,
               private ws: WebSocketService,
               private toastService: ToastService,
-              private userPipe: UserNamePipe
+              private userNamePipe: UserNamePipe
   ) {
     this.nodesMap              = {};
     this.onTitleEdition        = {};
@@ -204,7 +204,7 @@ export class TreeComponent implements OnInit, OnDestroy {
     } else {
       this.toastService.showCustom(
         `Un fil vient d'être créé par 
-        ${this.userPipe.transform(this.conversation.members.find(m => m.id === thread.author))}
+        ${this.userNamePipe.transform(this.conversation.members.find(m => m.id === thread.author))}
         !`
       );
     }

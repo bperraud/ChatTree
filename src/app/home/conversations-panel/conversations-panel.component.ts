@@ -32,6 +32,7 @@ export class ConversationsPanelComponent implements OnInit, AfterViewInit {
           conversations: Array<Conversation>;
           conversationsSubscription: Subscription;
           user: User;
+          convSearch = "";
 
   //noinspection JSUnusedLocalSymbols
   constructor(

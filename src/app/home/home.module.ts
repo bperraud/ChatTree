@@ -22,6 +22,7 @@ import { LogoutService } from './_services/logout.service';
 import { ImgFallbackModule } from 'ngx-img-fallback';
 import { TreeModule } from 'angular-tree-component';
 import { ExcludeSelfUserPipe } from './_pipes/exclude-self-user.pipe';
+import { ConversationFilterPipe } from './_pipes/conversation-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { ExcludeSelfUserPipe } from './_pipes/exclude-self-user.pipe';
     UserNamePipe,
     Nl2BrPipe,
     TreeComponent,
-    ExcludeSelfUserPipe
+    ExcludeSelfUserPipe,
+    ConversationFilterPipe
   ],
   imports: [
     HomeRoutingModule,
