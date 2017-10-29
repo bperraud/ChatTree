@@ -8,6 +8,7 @@
 
   <div class="conversations" #conversationContainer>
     <div class="conversations-wrapper">
+      <!-- TODO: handle correct routing while clicking again on the active conversation link -->
       <a
         *ngFor="let conv of conversations | conversationFilter:convSearch"
         routerLink="/conversation/{{conv.id}}"

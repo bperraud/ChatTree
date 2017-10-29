@@ -9,7 +9,7 @@
             (keydown)="handleSubmit($event)"
   ></textarea>
     <div class="send-message">
-      <i class="fa fa-caret-right" ng-click="sendMessage()"></i>
+      <i class="fa fa-caret-right" (click)="sendMessage()"></i>
     </div>
   </div>
   <div class="more" (click)="addFile.click()">

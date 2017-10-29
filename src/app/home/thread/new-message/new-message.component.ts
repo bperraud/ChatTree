@@ -10,9 +10,9 @@ import { Thread } from '../../_models/thread';
 import { ThreadService } from '../../_services/thread.service';
 
 @Component({
-  selector   : 'app-new-message',
+  selector: 'app-new-message',
   templateUrl: './new-message.component.html',
-  styleUrls  : ['./new-message.component.less']
+  styleUrls: ['./new-message.component.less']
 })
 export class NewMessageComponent implements OnInit {
   @ViewChild('messageContentContainer') private scrollContainer: ElementRef;
@@ -20,13 +20,11 @@ export class NewMessageComponent implements OnInit {
   @Input() thread: Thread;
            message: Message = new Message();
 
-  constructor(
-    private auth: AuthService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private threadService: ThreadService,
-    private ws: WebSocketService
-  ) {
+  constructor(private auth: AuthService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private threadService: ThreadService,
+              private ws: WebSocketService) {
     this.ws.message$.subscribe(
       msg => {
         if (msg.author === this.auth.getUser().id) {
@@ -36,13 +34,13 @@ export class NewMessageComponent implements OnInit {
       });
   }
 
-  ngOnInit() {}
-
-  goToTreeView() {
-    this.router.navigate(['../../overview'], { relativeTo: this.route });
+  ngOnInit() {
   }
 
-  // TODO: handle the submit by clicking on the triangle button
+  goToTreeView() {
+    this.router.navigate(['../../overview'], {relativeTo: this.route});
+  }
+
   handleSubmit($event) {
     if ($event.keyCode !== 13) return;
 
@@ -51,16 +49,13 @@ export class NewMessageComponent implements OnInit {
 
     // Send the message
     if (!$event.shiftKey) {
-      // Don't send an empty message
-      if (this.message.content.replace(/(?:\r\n|\r|\n|\s)/g, '') === '')
-        return;
       this.sendMessage();
       return;
     }
 
     // Or add a new line
     this.message.content += '\r\n';
-    // Scroll to the bottom of the textarea
+    // Scroll to the bottom of the text area
     $(this.scrollContainer.nativeElement)
       .animate({
           scrollTop: $(this.scrollContainer.nativeElement).prop("scrollHeight")
@@ -71,6 +66,9 @@ export class NewMessageComponent implements OnInit {
   }
 
   sendMessage() {
+    // Don't send an empty message
+    if (this.message.content.replace(/(?:\r\n|\r|\n|\s)/g, '') === '')
+      return;
     this.message.thread = this.thread.id;
     console.log('message to send :');
     console.log(this.message);
