@@ -31,7 +31,8 @@ CREATE TABLE t_thread (
     id SERIAL PRIMARY KEY,
     creation_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     title VARCHAR(200),
-	fk_author INTEGER REFERENCES t_user,
+    fk_author INTEGER REFERENCES t_user,
+    fk_conversation INTEGER NOT NULL,
     fk_thread_parent INTEGER REFERENCES t_thread,
     fk_message_parent INTEGER REFERENCES t_message
 );
@@ -48,15 +49,17 @@ CREATE TABLE t_tag_thread (
 
 CREATE TABLE t_conversation (
     id SERIAL PRIMARY KEY,
-    fk_root_thread INTEGER NOT NULL REFERENCES t_thread,
+    fk_root_thread INTEGER REFERENCES t_thread,
     title VARCHAR(200),
     picture VARCHAR(200)
 );
+
+ALTER TABLE t_thread
+ADD FOREIGN KEY (fk_conversation)
+REFERENCES t_conversation;
 
 CREATE TABLE t_conversation_user (
     id SERIAL PRIMARY KEY,
     fk_conversation INTEGER NOT NULL REFERENCES t_conversation,
     fk_member INTEGER NOT NULL REFERENCES t_user
 );
-
-ALTER TABLE t_thread ADD COLUMN fk_conversation INTEGER NOT NULL REFERENCES t_conversation;
