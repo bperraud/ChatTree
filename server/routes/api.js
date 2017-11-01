@@ -91,7 +91,6 @@ router.get('/search-users', auth.verifyToken, (req, res) => {
 
   let searchTerm = `.*${req.query.q}.*`,
       parsedIds  = [req.session.user.id].concat(JSON.parse(req.query.ids));
-  //db.query("CREATE CAST (varchar as bytea) WITHOUT FUNCTION;");//must be superuser of pg
   db.query(
     SQL`
     SELECT
@@ -105,8 +104,8 @@ router.get('/search-users', auth.verifyToken, (req, res) => {
     `, (err, dbres) => {
       if (err) throw err;
 
-      dbres.rows.forEach(function(row){
-          if (row['profile_picture'] != null)
+      dbres.rows.forEach(function (row) {
+          if (row['profile_picture'] !== null)
             row['profile_picture'] = Buffer.from(row['profile_picture']).toString('base64');
         }
       );
