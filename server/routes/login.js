@@ -56,8 +56,8 @@ router.post('/signup', (req, res) => {
         `, (err, dbres) => {
         if (err) throw err;
 
-        let token = jwt.sign(user, config.secret, {
-          expiresIn: 60 * 60 * 24
+        let token = jwt.sign(user.email, config.secret, {
+          //expiresIn: 60 * 60 * 24 //does not work with a string payload
         });
 
         user.id = dbres.rows[0].id;
@@ -105,17 +105,21 @@ router.post('/login', (req, res) => {
 
       dbres.rows.forEach(row => user.conversations.push(+row.fk_conversation));
 
-      let token = jwt.sign(user, config.secret, {
-        expiresIn: 60 * 60 * 24
+      let token = jwt.sign(user.email, config.secret, {
+        //expiresIn: 60 * 60 * 24 //does not work with a string payload
       });
 
-      (async(function () {
+      /*(async(function () {
         try {
           await(req.session.user = user);
         } catch (e) {
           throw e;
         }
-      }))().catch(e => console.error(e.stack));
+      }))().catch(e => console.error(e.stack));*/
+
+      req.session.user = user;
+
+      console.log("User : " + req.session.user);
 
       return res.json(new Message(
         {user, token},

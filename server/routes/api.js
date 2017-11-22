@@ -27,6 +27,7 @@ router.put('/set-user', auth.verifyToken, (req, res) => {
 
 // Get a user conversations list
 router.get('/get-conversations', auth.verifyToken, (req, res) => {
+  console.log("User : " + req.session.user);
   let user = new User(req.session.user);
 
   if (user.conversations.length === 0)
