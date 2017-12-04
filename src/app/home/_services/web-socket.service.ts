@@ -36,6 +36,7 @@ export class WebSocketService {
   ) {}
 
   private socket_url = 'http://localhost:3000';
+  // private socket_url = 'https://07f4db71.ngrok.io';
   private mainSocket: any;
   private activeConvSocket: any;
 

@@ -118,6 +118,32 @@ router.get('/search-users', auth.verifyToken, (req, res) => {
     });
 });
 
+router.get('/get-users', auth.verifyToken, (req, res) => {
+  let userId = req.session.user.id;
+  db.query(
+    SQL`
+    SELECT
+    id, login, email, profile_picture
+    FROM t_user
+    WHERE id <> ${userId}
+    ORDER BY email
+    `, (err, dbres) => {
+      if (err) throw err;
+
+      dbres.rows.forEach(function (row) {
+          if (row['profile_picture'] !== null)
+            row['profile_picture'] = Buffer.from(row['profile_picture']).toString('base64');
+        }
+      );
+
+      return res.json(new Message(
+        {users: dbres.rows},
+        true,
+        'Utilisateurs récupérés'
+      ));
+    });
+});
+
 // Conversation routes
 router.use('/', conversation);
 router.use('/', thread);
