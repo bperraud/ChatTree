@@ -76,6 +76,7 @@ router.get('/get-conv/:id', auth.verifyToken, (req, res) => {
         t_thread.id,
         t_thread.creation_date date,
         t_thread.title,
+        t_thread.fk_author author,
         t_thread.fk_thread_parent thread_parent,
         t_thread.fk_message_parent message_parent,
         t_thread.fk_conversation conversation,
